@@ -228,8 +228,8 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-            <div className="bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full my-8 max-h-[calc(100vh-4rem)]">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center p-4 pt-8 z-50 overflow-y-auto">
+            <div className="bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full mb-8 max-h-[calc(100vh-4rem)]">
                 <div className="max-h-[calc(100vh-4rem)] overflow-y-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-700 sticky top-0 bg-gray-800 z-10">

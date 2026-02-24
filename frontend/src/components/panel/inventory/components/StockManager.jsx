@@ -60,9 +60,8 @@ const StockManager = ({ tool, type, onUpdateStock, onClose, onSuccess }) => {
                 await onUpdateStock(tool.id, quantity);
                 alert(`${quantity} unidad(es) agregadas exitosamente`);
             } else {
-                // Dar de baja: el backend maneja automáticamente dar de baja instancias disponibles
-                // y actualizar el stock correctamente
-                await onUpdateStock(tool.id, 1);
+                // Dar de baja: enviar el instanceId específico seleccionado
+                await onUpdateStock(tool.id, parseInt(selectedInstanceId));
                 alert('Herramienta dada de baja exitosamente');
             }
 

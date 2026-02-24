@@ -87,8 +87,9 @@ public class KardexMovementService {
     @Transactional
     public KardexMovementEntity createInitialStockMovement(ToolEntity tool, Integer initialStock) {
         // Las instancias ya deberían estar creadas por el ToolService
+        // IMPORTANTE: Para el stock inicial, el stockBefore siempre debe ser 0
         return createMovement(tool, KardexMovementEntity.MovementType.INITIAL_STOCK,
-                initialStock, "Initial stock registration for " + tool.getName());
+                initialStock, "Initial stock registration for " + tool.getName(), null, 0);
     }
 
     // RF5.1: Create loan movement with instance tracking
@@ -144,7 +145,8 @@ public class KardexMovementService {
     @Transactional
     public KardexMovementEntity createDecommissionMovement(ToolEntity tool, Integer quantity,
                                                            String description,
-                                                           List<Long> instanceIds) {
+                                                           List<Long> instanceIds,
+                                                           Integer stockBeforeMovement) {
 
         // IMPORTANTE: No dar de baja las instancias aquí porque ToolService.decommissionTool() ya lo hizo
         // Solo registrar el movimiento en el kardex
@@ -156,7 +158,7 @@ public class KardexMovementService {
         }
 
         KardexMovementEntity movement = createMovement(tool, KardexMovementEntity.MovementType.DECOMMISSION,
-                quantity, finalDescription);
+                quantity, finalDescription, null, stockBeforeMovement);
 
         return kardexMovementRepository.save(movement);
     }
@@ -164,25 +166,12 @@ public class KardexMovementService {
     // RF5.1: Create restock movement
     @Transactional
     public KardexMovementEntity createRestockMovement(ToolEntity tool, Integer quantity,
-                                                      String description) {
+                                                      String description, Integer stockBeforeMovement) {
 
+        // IMPORTANTE: No crear instancias aquí porque ToolService.addToolStock() ya las crea
+        // Este método solo registra el movimiento en el kardex
         KardexMovementEntity movement = createMovement(tool, KardexMovementEntity.MovementType.RESTOCK,
-                quantity, description);
-
-        // MEJORA: Crear nuevas instancias para el restock
-        try {
-            List<ToolInstanceEntity> newInstances =
-                    toolInstanceService.createInstances(tool, quantity);
-
-            List<Long> instanceIds = newInstances.stream()
-                    .map(ToolInstanceEntity::getId)
-                    .collect(java.util.stream.Collectors.toList());
-
-            movement.setDescription(description + " - Nuevas instancias creadas: " + instanceIds);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error al crear nuevas instancias en restock: " + e.getMessage());
-        }
+                quantity, description, null, stockBeforeMovement);
 
         return kardexMovementRepository.save(movement);
     }

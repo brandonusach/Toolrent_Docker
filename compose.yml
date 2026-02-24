@@ -1,0 +1,126 @@
+services:
+  # --- SERVICIOS FRONTEND ---
+  frontend1:
+    build:
+      context: ./frontend  # Ruta corregida
+      dockerfile: Dockerfile
+      args:
+        VITE_TOOLRENT_BACKEND_SERVER: ${HOST_IP}
+        VITE_TOOLRENT_BACKEND_PORT: 8081
+        VITE_KEYCLOAK_URL: http://${HOST_IP}:8080
+        VITE_KEYCLOAK_REALM: toolrent-realm
+        VITE_KEYCLOAK_CLIENT_ID: toolrent-frontend
+    networks:
+      - app-network
+
+  frontend2:
+    build:
+      context: ./frontend  # Ruta corregida
+      dockerfile: Dockerfile
+      args:
+        VITE_TOOLRENT_BACKEND_SERVER: ${HOST_IP}
+        VITE_TOOLRENT_BACKEND_PORT: 8081
+        VITE_KEYCLOAK_URL: http://${HOST_IP}:8080
+        VITE_KEYCLOAK_REALM: toolrent-realm
+        VITE_KEYCLOAK_CLIENT_ID: toolrent-frontend
+    networks:
+      - app-network
+
+  frontend3:
+    build:
+      context: ./frontend  # Ruta corregida
+      dockerfile: Dockerfile
+      args:
+        VITE_TOOLRENT_BACKEND_SERVER: ${HOST_IP}
+        VITE_TOOLRENT_BACKEND_PORT: 8081
+        VITE_KEYCLOAK_URL: http://${HOST_IP}:8080
+        VITE_KEYCLOAK_REALM: toolrent-realm
+        VITE_KEYCLOAK_CLIENT_ID: toolrent-frontend
+    networks:
+      - app-network
+
+  # --- SERVICIOS BACKEND ---
+  backend1:
+    build:
+      context: ./backend  # Ruta corregida
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=${HOST_IP}
+      - DB_PORT=5432
+      - DB_NAME=toolrent_db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=1234
+      - KEYCLOAK_SERVER_URL=http://${HOST_IP}:8080
+      - KEYCLOAK_REALM=toolrent-realm
+      - SERVER_PORT=8081
+      - FRONTEND_URL=http://${HOST_IP}:8070
+      - CORS_ALLOWED_ORIGINS=http://${HOST_IP}:8070,http://localhost:8070
+    networks:
+      - app-network
+
+  backend2:
+    build:
+      context: ./backend  # Ruta corregida
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=${HOST_IP}
+      - DB_PORT=5432
+      - DB_NAME=toolrent_db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=1234
+      - KEYCLOAK_SERVER_URL=http://${HOST_IP}:8080
+      - KEYCLOAK_REALM=toolrent-realm
+      - SERVER_PORT=8081
+      - FRONTEND_URL=http://${HOST_IP}:8070
+      - CORS_ALLOWED_ORIGINS=http://${HOST_IP}:8070,http://localhost:8070
+    networks:
+      - app-network
+
+  backend3:
+    build:
+      context: ./backend  # Ruta corregida
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=${HOST_IP}
+      - DB_PORT=5432
+      - DB_NAME=toolrent_db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=1234
+      - KEYCLOAK_SERVER_URL=http://${HOST_IP}:8080
+      - KEYCLOAK_REALM=toolrent-realm
+      - SERVER_PORT=8081
+      - FRONTEND_URL=http://${HOST_IP}:8070
+      - CORS_ALLOWED_ORIGINS=http://${HOST_IP}:8070,http://localhost:8070
+    networks:
+      - app-network
+
+  # --- LOAD BALANCERS ---
+  nginx-frontend:
+    image: nginx:latest
+    ports:
+      - "8070:80"
+    volumes:
+      - ./nginx-frontend.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend1
+      - frontend2
+      - frontend3
+    networks:
+      - app-network
+
+  nginx-backend:
+    image: nginx:latest
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./nginx-backend.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend1
+      - backend2
+      - backend3
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

@@ -138,10 +138,11 @@ public class KardexMovementController {
             ToolEntity tool = toolService.getToolById(toolId)
                     .orElseThrow(() -> new RuntimeException("Tool not found"));
 
-
+            // Capturar stock antes de crear el movimiento
+            Integer stockBefore = tool.getCurrentStock();
 
             KardexMovementEntity movement = kardexMovementService.createDecommissionMovement(
-                    tool, quantity, description, instanceIds);
+                    tool, quantity, description, instanceIds, stockBefore);
 
             return new ResponseEntity<>(movement, HttpStatus.CREATED);
         } catch (RuntimeException e) {
@@ -164,9 +165,11 @@ public class KardexMovementController {
             ToolEntity tool = toolService.getToolById(toolId)
                     .orElseThrow(() -> new RuntimeException("Tool not found"));
 
+            // Capturar el stock ANTES de crear el movimiento
+            Integer stockBefore = tool.getCurrentStock();
 
             KardexMovementEntity movement = kardexMovementService.createRestockMovement(
-                    tool, quantity, description);
+                    tool, quantity, description, stockBefore);
 
             return new ResponseEntity<>(movement, HttpStatus.CREATED);
         } catch (RuntimeException e) {

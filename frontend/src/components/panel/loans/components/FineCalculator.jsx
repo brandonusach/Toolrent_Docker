@@ -241,7 +241,7 @@ const FineCalculator = ({ loan, onClose }) => {
                                         ${estimatedFines.damageFine.toFixed(2)}
                                     </p>
                                     <p className="text-purple-300 text-xs">
-                                        Estimación: 20% del valor de reposición
+                                        Estimación: {rates.current?.REPAIR_RATE || 30}% del valor de reposición
                                     </p>
                                 </div>
                                 <div>

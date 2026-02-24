@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Package, AlertTriangle, FileText, CheckCircle, Loader } from 'lucide-react';
 import { formatDateLocal, daysBetween } from '../../../../utils/dateUtils';
+import { useRates } from '../../rates/hooks/useRates';
 
 const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
     const [returnData, setReturnData] = useState({
@@ -13,6 +14,14 @@ const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [lateInfo, setLateInfo] = useState(null);
+
+    // Hook para obtener tarifas actuales
+    const { rates, getCurrentRates } = useRates();
+
+    // Cargar tarifas actuales al abrir el formulario
+    useEffect(() => {
+        getCurrentRates();
+    }, [getCurrentRates]);
 
     // Calcular información de atraso
     useEffect(() => {
@@ -69,8 +78,8 @@ const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
     }
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
-            <div className="bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full my-8 max-h-[calc(100vh-4rem)]">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center p-4 pt-8 z-50 overflow-y-auto">
+            <div className="bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full mb-8 max-h-[calc(100vh-4rem)]">
                 <div className="max-h-[calc(100vh-4rem)] overflow-y-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-700 sticky top-0 bg-gray-800 z-10">
@@ -227,7 +236,7 @@ const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
                                                 <p className="font-medium">Flujo de reparación y multa</p>
                                                 <p className="text-xs text-yellow-300 mt-1">
                                                     <strong>1.</strong> La herramienta pasa a estado "En Reparación" (no disponible).<br/>
-                                                    <strong>2.</strong> Se crea una multa del 20% del valor de reposición (${(loan.tool?.replacementValue * 0.2).toFixed(2)}).<br/>
+                                                    <strong>2.</strong> Se crea una multa del {rates.current?.REPAIR_RATE || 30}% del valor de reposición (${(loan.tool?.replacementValue * ((rates.current?.REPAIR_RATE || 30) / 100)).toFixed(2)}).<br/>
                                                     <strong>3.</strong> La herramienta como "Reparada" desde el inventario cuando esté físicamente lista.<br/>
                                                     <strong>4.</strong> La herramienta queda disponible aunque la multa siga pendiente de pago.
                                                 </p>

@@ -185,7 +185,7 @@ public class ToolInstanceService {
         instance.setStatus(ToolInstanceStatus.AVAILABLE);
         ToolInstanceEntity repairedInstance = toolInstanceRepository.save(instance);
 
-        // 🔧 NUEVO: Actualizar el stock de la herramienta y su estado
+        // Actualizar el stock de la herramienta y su estado
         try {
             ToolEntity tool = instance.getTool();
             if (tool != null) {
@@ -300,7 +300,7 @@ public class ToolInstanceService {
         return returnedInstances;
     }
 
-    // NUEVO: Reparar múltiples instancias (UNDER_REPAIR → AVAILABLE) - usado al pagar multa por daño leve
+    //Reparar múltiples instancias (UNDER_REPAIR → AVAILABLE) - usado al pagar multa por daño leve
     @Transactional
     public List<ToolInstanceEntity> repairInstances(Long toolId, int quantity) {
         if (quantity <= 0) {
@@ -329,7 +329,7 @@ public class ToolInstanceService {
         return repairedInstances;
     }
 
-    // NUEVO: Dar de baja múltiples instancias - usado al devolver con daño irreparable o al pagar multa
+    // Dar de baja múltiples instancias - usado al devolver con daño irreparable o al pagar multa
     @Transactional
     public List<ToolInstanceEntity> decommissionInstances(Long toolId, int quantity) {
         if (quantity <= 0) {

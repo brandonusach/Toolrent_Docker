@@ -92,10 +92,10 @@ export const useTools = () => {
     }, []);
 
     // Decommission tool - específico de tu negocio
-    const decommissionTool = useCallback(async (toolId, quantity) => {
+    const decommissionTool = useCallback(async (toolId, instanceId) => {
         try {
             const response = await httpClient.put(`/api/v1/tools/${toolId}/decommission`, null, {
-                params: { quantity }
+                params: { instanceId }
             });
             const updatedTool = response.data;
 

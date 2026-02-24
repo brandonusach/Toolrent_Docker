@@ -61,8 +61,8 @@ public class ToolController {
     }
 
     @PutMapping("/{id}/decommission")
-    public ResponseEntity<ToolEntity> decommissionTool(@PathVariable Long id, @RequestParam Integer quantity) {
-        ToolEntity updatedTool = toolService.decommissionTool(id, quantity);
+    public ResponseEntity<ToolEntity> decommissionTool(@PathVariable Long id, @RequestParam Long instanceId) {
+        ToolEntity updatedTool = toolService.decommissionToolInstance(id, instanceId);
         return ResponseEntity.ok(updatedTool);
     }
 }

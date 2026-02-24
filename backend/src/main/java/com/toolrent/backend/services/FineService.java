@@ -38,6 +38,9 @@ public class FineService {
     @Autowired(required = false)
     private ToolInstanceService toolInstanceService;
 
+    @Autowired
+    private RateService rateService;
+
     // Verificar si el cliente tiene multas impagas - VERSIÓN SEGURA
     public boolean clientHasUnpaidFines(ClientEntity client) {
         try {
@@ -561,8 +564,9 @@ public class FineService {
             String fineDescription;
 
             if (damageType == FineEntity.DamageType.MINOR) {
-                // Daño leve: 20% del valor de reposición
-                fineAmount = tool.getReplacementValue().multiply(BigDecimal.valueOf(0.2));
+                // Daño leve: usar tarifa de reparación del sistema (% del valor de reposición)
+                BigDecimal repairRate = rateService.getCurrentRepairRate(); // Retorna el porcentaje (ej: 30.0)
+                fineAmount = tool.getReplacementValue().multiply(repairRate.divide(BigDecimal.valueOf(100), 2, java.math.RoundingMode.HALF_UP));
                 fineType = FineEntity.FineType.DAMAGE_REPAIR;
                 fineDescription = "Multa por reparación (daño leve) - " + (description != null ? description : "");
             } else {

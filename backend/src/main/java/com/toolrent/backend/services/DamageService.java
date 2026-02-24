@@ -300,12 +300,17 @@ public class DamageService {
         // Decommission the tool instance
         toolInstanceService.decommissionInstance(damage.getToolInstance().getId());
 
+        // Capturar stock antes de actualizar
+        ToolEntity tool = damage.getToolInstance().getTool();
+        int stockBefore = tool.getCurrentStock();
+
         // Create kardex movement for decommission
         kardexMovementService.createDecommissionMovement(
-                damage.getToolInstance().getTool(),
+                tool,
                 1,
                 "Tool instance decommissioned due to irreparable damage #" + damage.getId(),
-                List.of(damage.getToolInstance().getId())
+                List.of(damage.getToolInstance().getId()),
+                stockBefore
         );
 
         // Update tool stock

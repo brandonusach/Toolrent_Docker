@@ -1,4 +1,3 @@
-// LoanService.java - VERSION CORREGIDA para manejar errores 500
 package com.toolrent.backend.services;
 
 import com.toolrent.backend.entities.*;
@@ -394,7 +393,7 @@ public class LoanService {
             // Valores por defecto
             rates.put("rentalRate", BigDecimal.valueOf(100.0));
             rates.put("lateFeeRate", BigDecimal.valueOf(10.0));
-            rates.put("repairRate", BigDecimal.valueOf(0.2));
+            rates.put("repairRate", BigDecimal.valueOf(30.0)); // 30% como valor decimal
             rates.put("error", "Usando valores por defecto");
         }
         return rates;
@@ -674,7 +673,7 @@ public class LoanService {
                 boolean isIrreparable = damageType != null && damageType.equals("IRREPARABLE");
 
                 if (isIrreparable) {
-                    // 🔴 DAÑO IRREPARABLE: Dar de baja inmediatamente
+                    //  Dar de baja inmediatamente
                     System.out.println("IRREPARABLE DAMAGE - Decommissioning instances immediately");
 
                     if (toolInstanceService != null) {
@@ -693,11 +692,15 @@ public class LoanService {
                                 String decommissionDescription = "Baja por daño irreparable en devolución - Préstamo #" +
                                     loan.getId() + " - Cliente: " + loan.getClient().getName();
 
+                                // Capturar stock antes de actualizar
+                                int stockBefore = tool.getCurrentStock();
+
                                 kardexMovementService.createDecommissionMovement(
                                     tool,
                                     loan.getQuantity(),
                                     decommissionDescription,
-                                    instanceIds
+                                    instanceIds,
+                                    stockBefore
                                 );
                                 System.out.println("Registered DECOMMISSION movement in kardex for tool " + tool.getName());
                             }
@@ -705,9 +708,6 @@ public class LoanService {
                             System.err.println("Error decommissioning tool instances: " + e.getMessage());
                         }
                     }
-
-                    // NO restaurar stock (herramienta perdida)
-                    // El stock permanece reducido ya que la herramienta está dada de baja
 
                 } else {
                     // 🟡 DAÑO LEVE: Marcar en reparación (se restaurará al pagar multa)

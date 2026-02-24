@@ -7,7 +7,7 @@ import ClientForm from './components/ClientForm';
 import ClientDetail from './components/ClientDetail';
 import ClientSearch from './components/ClientSearch';
 import { useClients } from './hooks/useClients';
-import { CLIENT_STATUS, PERMISSIONS, hasPermission } from './utils/clientConstants';
+import { CLIENT_STATUS, PERMISSIONS, hasPermission } from './utils/ClientConstants';
 
 const ClientManagement = () => {
     // La lógica existente del componente no necesita cambios

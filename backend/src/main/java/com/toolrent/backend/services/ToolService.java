@@ -258,6 +258,9 @@ public class ToolService {
         ToolEntity tool = toolRepository.findByIdWithCategory(toolId)
                 .orElseThrow(() -> new IllegalArgumentException("Herramienta no encontrada con ID: " + toolId));
 
+        // IMPORTANTE: Capturar el stock ANTES de agregar para el registro del kardex
+        int stockBeforeAdding = tool.getCurrentStock();
+
         // Validar que no exceda el máximo de stock
         int newInitialStock = tool.getInitialStock() + quantity;
         int newCurrentStock = tool.getCurrentStock() + quantity;
@@ -273,7 +276,7 @@ public class ToolService {
         tool.setInitialStock(newInitialStock);
         tool.setCurrentStock(newCurrentStock);
 
-        // 🔧 CORRECCIÓN: Actualizar estado a AVAILABLE cuando se agrega stock
+        // Actualizar estado a AVAILABLE cuando se agrega stock
         // Si la herramienta estaba en LOANED o DECOMMISSIONED, ahora tiene stock disponible
         if (newCurrentStock > 0 && (tool.getStatus() == ToolEntity.ToolStatus.LOANED ||
                                      tool.getStatus() == ToolEntity.ToolStatus.DECOMMISSIONED)) {
@@ -291,10 +294,10 @@ public class ToolService {
 
         ToolEntity savedTool = toolRepository.save(tool);
 
-        // Create Kardex movement for restock
+        // Create Kardex movement for restock - pasando el stock ANTES de agregar
         try {
             String description = String.format("Reposición de stock desde gestión de inventario - %d unidad(es)", quantity);
-            kardexMovementService.createRestockMovement(savedTool, quantity, description);
+            kardexMovementService.createRestockMovement(savedTool, quantity, description, stockBeforeAdding);
         } catch (Exception e) {
             System.err.println("Error creando movimiento Kardex para reposición: " + e.getMessage());
             // No lanzar excepción para no afectar el proceso principal
@@ -305,7 +308,63 @@ public class ToolService {
                 .orElse(savedTool);
     }
 
-    // Decommission tool
+    // Decommission specific tool instance
+    @Transactional
+    public ToolEntity decommissionToolInstance(Long toolId, Long instanceId) {
+        if (instanceId == null) {
+            throw new IllegalArgumentException("El ID de la instancia es requerido");
+        }
+
+        ToolEntity tool = toolRepository.findByIdWithCategory(toolId)
+                .orElseThrow(() -> new IllegalArgumentException("Herramienta no encontrada con ID: " + toolId));
+
+        // Find the specific instance
+        ToolInstanceEntity instance = toolInstanceRepository.findById(instanceId)
+                .orElseThrow(() -> new IllegalArgumentException("Instancia no encontrada con ID: " + instanceId));
+
+        // Verify the instance belongs to this tool
+        if (!instance.getTool().getId().equals(toolId)) {
+            throw new IllegalArgumentException("La instancia no pertenece a esta herramienta");
+        }
+
+        // Verify the instance is available
+        if (instance.getStatus() != ToolInstanceEntity.ToolInstanceStatus.AVAILABLE) {
+            throw new IllegalArgumentException(
+                    String.format("La instancia #%d no está disponible para dar de baja. Estado actual: %s",
+                            instanceId, instance.getStatus())
+            );
+        }
+
+        // IMPORTANTE: Capturar el stock ANTES de dar de baja para el registro del kardex
+        int stockBeforeDecommission = tool.getCurrentStock();
+
+        // Decommission the specific instance
+        instance.setStatus(ToolInstanceEntity.ToolInstanceStatus.DECOMMISSIONED);
+        toolInstanceRepository.save(instance);
+
+        // Update current stock
+        tool.setCurrentStock(tool.getCurrentStock() - 1);
+
+        ToolEntity savedTool = toolRepository.save(tool);
+
+        // Create Kardex movement for decommission - con stock correcto
+        List<Long> instanceIds = new java.util.ArrayList<>();
+        instanceIds.add(instanceId);
+        String description = String.format("Baja de herramienta desde gestión de inventario - 1 unidad(es) - Instancias dadas de baja: [%d]", instanceId);
+
+        System.out.println("=== DEBUG: Registrando movimiento DECOMMISSION en kardex para herramienta ID " + savedTool.getId() + " ===");
+        System.out.println("=== DEBUG: Stock ANTES: " + stockBeforeDecommission + ", Stock DESPUÉS: " + savedTool.getCurrentStock() + " ===");
+
+        kardexMovementService.createDecommissionMovement(savedTool, 1, description, instanceIds, stockBeforeDecommission);
+
+        System.out.println("=== DEBUG: Movimiento DECOMMISSION registrado exitosamente ===");
+
+        // Reload tool with category to return complete object
+        return toolRepository.findByIdWithCategory(savedTool.getId())
+                .orElse(savedTool);
+    }
+
+    // Decommission tool (legacy method - kept for compatibility)
     @Transactional
     public ToolEntity decommissionTool(Long toolId, Integer quantity) {
         if (quantity == null || quantity <= 0) {
@@ -314,6 +373,9 @@ public class ToolService {
 
         ToolEntity tool = toolRepository.findByIdWithCategory(toolId)
                 .orElseThrow(() -> new IllegalArgumentException("Herramienta no encontrada con ID: " + toolId));
+
+        // IMPORTANTE: Capturar el stock ANTES de dar de baja
+        int stockBeforeDecommission = tool.getCurrentStock();
 
         // Get available instances
         List<ToolInstanceEntity> availableInstances = toolInstanceRepository
@@ -342,10 +404,10 @@ public class ToolService {
 
         ToolEntity savedTool = toolRepository.save(tool);
 
-        // Create Kardex movement for decommission - MEJORADO
+        // Create Kardex movement for decommission - MEJORADO con stock correcto
         String description = String.format("Baja de herramienta desde gestión de inventario - %d unidad(es)", quantity);
         System.out.println("=== DEBUG: Registrando movimiento DECOMMISSION en kardex para herramienta ID " + savedTool.getId() + " ===");
-        kardexMovementService.createDecommissionMovement(savedTool, quantity, description, instanceIds);
+        kardexMovementService.createDecommissionMovement(savedTool, quantity, description, instanceIds, stockBeforeDecommission);
         System.out.println("=== DEBUG: Movimiento DECOMMISSION registrado exitosamente ===");
 
         // Reload tool with category to return complete object
