@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿﻿import React, { useState, useEffect } from 'react';
 import { Calculator, Settings } from 'lucide-react';
 
 // Componentes
@@ -66,11 +66,11 @@ const RateManagement = () => {
 
     if (!hasPermission(isAdmin ? 'admin' : 'user', PERMISSIONS.RATE.VIEW)) {
         return (
-            <div className="p-6 bg-gray-900 min-h-screen">
+            <div>
                 <div className="flex items-center justify-center py-12">
                     <div className="text-center">
                         <p className="text-red-400 mb-2">No tiene permisos para acceder a la gestión de tarifas</p>
-                        <p className="text-gray-400">Contacte al administrador para obtener acceso</p>
+                        <p className="text-slate-400">Contacte al administrador para obtener acceso</p>
                     </div>
                 </div>
             </div>
@@ -78,29 +78,27 @@ const RateManagement = () => {
     }
 
     return (
-        <div className="p-6 bg-gray-900 min-h-screen">
+        <div>
             {/* Header */}
             <div className="mb-8">
-                <div className="mb-6">
-                    <h1 className="text-3xl font-bold text-white mb-2">
-                        Gestión de Tarifas Globales
-                    </h1>
-                    <p className="text-gray-400">
-                        Administra multas por atraso y tarifas de reparación del sistema (solo Administradores)
-                    </p>
-                    <p className="text-gray-500 text-sm mt-1">
-                        Nota: Las tarifas de arriendo se configuran individualmente en cada herramienta
-                    </p>
-                </div>
+                <h1 className="text-3xl font-bold text-white mb-2">
+                    Gestión de Tarifas Globales
+                </h1>
+                <p className="text-slate-400">
+                    Administra multas por atraso y tarifas de reparación del sistema (solo Administradores)
+                </p>
+                <p className="text-sm text-slate-500 mt-1 mb-6">
+                    Nota: Las tarifas de arriendo se configuran individualmente en cada herramienta
+                </p>
 
                 {/* Current Rates Summary */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                    <div className="bg-slate-800/60 backdrop-blur-sm p-6 rounded-lg border border-slate-700/50 shadow-lg">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-gray-400 text-sm font-medium">Multa por Atraso</p>
+                                <p className="text-slate-400 text-sm font-medium">Multa por Atraso</p>
                                 <p className="text-3xl font-bold text-white">${stats.lateFeeRate.toLocaleString()}</p>
-                                <p className="text-sm text-gray-400">por día</p>
+                                <p className="text-sm text-slate-400">por día</p>
                             </div>
                             <div className="bg-red-500/20 p-3 rounded-lg">
                                 <Calculator className="text-red-400" size={24} />
@@ -108,15 +106,15 @@ const RateManagement = () => {
                         </div>
                     </div>
 
-                    <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                    <div className="bg-slate-800/60 backdrop-blur-sm p-6 rounded-lg border border-slate-700/50 shadow-lg">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-gray-400 text-sm font-medium">Tarifa Reparación</p>
+                                <p className="text-slate-400 text-sm font-medium">Tarifa Reparación</p>
                                 <p className="text-3xl font-bold text-white">{stats.repairRate}%</p>
-                                <p className="text-sm text-gray-400">del valor reposición</p>
+                                <p className="text-sm text-slate-400">del valor reposición</p>
                             </div>
-                            <div className="bg-blue-500/20 p-3 rounded-lg">
-                                <Settings className="text-blue-400" size={24} />
+                            <div className="bg-orange-500/20 p-3 rounded-lg">
+                                <Settings className="text-orange-400" size={24} />
                             </div>
                         </div>
                     </div>
@@ -140,7 +138,7 @@ const RateManagement = () => {
 
             {/* Navigation Tabs */}
             <div className="mb-6">
-                <nav className="flex space-x-1 bg-gray-800 p-1 rounded-xl">
+                <nav className="flex space-x-1 bg-slate-800 p-1 rounded-lg border border-slate-700/50">
                     {tabs.map((tab) => {
                         const Icon = tab.icon;
                         return (
@@ -149,8 +147,8 @@ const RateManagement = () => {
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
                                     activeTab === tab.id
-                                        ? 'bg-blue-600 text-white shadow-lg'
-                                        : 'text-gray-400 hover:text-white hover:bg-gray-700'
+                                        ? 'bg-orange-600 text-white shadow-lg'
+                                        : 'text-slate-400 hover:text-white hover:bg-slate-700'
                                 }`}
                             >
                                 <Icon size={18} />
@@ -162,11 +160,11 @@ const RateManagement = () => {
             </div>
 
             {/* Tab Content */}
-            <div className="bg-gray-800 rounded-xl border border-gray-700">
+            <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg border border-slate-700/50 shadow-lg">
                 {loading ? (
                     <div className="flex items-center justify-center py-12">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-                        <span className="ml-4 text-gray-400">Cargando tarifas...</span>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+                        <span className="ml-4 text-slate-400">Cargando tarifas...</span>
                     </div>
                 ) : (
                     <>

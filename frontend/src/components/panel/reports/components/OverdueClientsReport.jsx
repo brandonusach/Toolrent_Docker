@@ -1,12 +1,18 @@
 // OverdueClientsReport.jsx - RF6.2: Listar clientes con atrasos
 import React, { useState, useMemo } from 'react';
-import { AlertTriangle, Users, Search, ArrowUpDown, ArrowUp, ArrowDown, ChevronDown, ChevronUp } from 'lucide-react';
+import { AlertTriangle, Users, Search, ArrowUpDown, ArrowUp, ArrowDown, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const ITEMS_OPTIONS = [10, 15, 20];
 
 const OverdueClientsReport = ({ data, loading }) => {
     const [sortField, setSortField] = useState('maxDaysOverdue');
     const [sortDirection, setSortDirection] = useState('desc');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedClient, setSelectedClient] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+
+    const handleItemsPerPageChange = (val) => { setItemsPerPage(val); setCurrentPage(1); };
 
     // Procesar y filtrar datos
     const processedData = useMemo(() => {
@@ -109,6 +115,11 @@ const OverdueClientsReport = ({ data, loading }) => {
         );
     }
 
+    // Paginación calculada antes del return
+    const totalPages = Math.ceil(processedData.clients.length / itemsPerPage);
+    const pageStart = (currentPage - 1) * itemsPerPage;
+    const paginatedClients = processedData.clients.slice(pageStart, pageStart + itemsPerPage);
+
     return (
         <div className="p-6">
             {/* Header y Resumen */}
@@ -198,9 +209,7 @@ const OverdueClientsReport = ({ data, loading }) => {
             {processedData.clients.length === 0 ? (
                 <div className="text-center py-12">
                     <Users className="h-12 w-12 text-slate-600 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-white mb-2">
-                        ¡Excelente!
-                    </h3>
+                    <h3 className="text-lg font-medium text-white mb-2">¡Excelente!</h3>
                     <p className="text-slate-400">No hay clientes con atrasos</p>
                 </div>
             ) : (
@@ -242,7 +251,7 @@ const OverdueClientsReport = ({ data, loading }) => {
                                 </tr>
                             </thead>
                             <tbody className="bg-slate-800/20 divide-y divide-slate-700">
-                                {processedData.clients.map((client) => {
+                                {paginatedClients.map((client) => {
                                     const riskLevel = getRiskLevel(client);
                                     const RiskIcon = riskLevel.icon;
                                     return (
@@ -334,6 +343,43 @@ const OverdueClientsReport = ({ data, loading }) => {
                             </tbody>
                         </table>
                     </div>
+
+                    {/* Paginación */}
+                    {processedData.clients.length > 0 && (
+                        <div className="px-4 py-3 border-t border-slate-700/50 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-800/40 rounded-b-lg">
+                            <div className="flex items-center gap-3 text-sm text-slate-400">
+                                <span>Mostrando {pageStart + 1}–{Math.min(pageStart + itemsPerPage, processedData.clients.length)} de {processedData.clients.length} clientes</span>
+                                <span className="text-slate-600">|</span>
+                                <span>Filas:</span>
+                                <select value={itemsPerPage} onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+                                    className="bg-slate-700 border border-slate-600 text-white rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500">
+                                    {ITEMS_OPTIONS.map(n => <option key={n} value={n}>{n}</option>)}
+                                </select>
+                            </div>
+                            <div className="flex items-center gap-1">
+                                <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}
+                                    className="px-2 py-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-xs">«</button>
+                                <button onClick={() => setCurrentPage(p => p - 1)} disabled={currentPage === 1}
+                                    className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                                    <ChevronLeft className="h-4 w-4" />
+                                </button>
+                                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                                    .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+                                    .reduce((acc, p, idx, arr) => { if (idx > 0 && p - arr[idx - 1] > 1) acc.push('...'); acc.push(p); return acc; }, [])
+                                    .map((item, idx) => item === '...'
+                                        ? <span key={`e${idx}`} className="px-2 text-slate-500 text-sm">…</span>
+                                        : <button key={item} onClick={() => setCurrentPage(item)}
+                                            className={`min-w-[2rem] h-8 rounded text-sm font-medium transition-colors ${currentPage === item ? 'bg-orange-600 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-700'}`}>{item}</button>
+                                    )}
+                                <button onClick={() => setCurrentPage(p => p + 1)} disabled={currentPage === totalPages}
+                                    className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                                    <ChevronRight className="h-4 w-4" />
+                                </button>
+                                <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}
+                                    className="px-2 py-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-xs">»</button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

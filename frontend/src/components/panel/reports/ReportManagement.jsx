@@ -1,4 +1,4 @@
-// ReportManagement.jsx - Contenedor principal para reportes y consultas
+﻿﻿// ReportManagement.jsx - Contenedor principal para reportes y consultas
 import React, { useState, useEffect } from 'react';
 import { useReports } from './hooks/useReports';
 import ActiveLoansReport from './components/ActiveLoansReport';
@@ -31,7 +31,6 @@ const ReportManagement = () => {
                 // Cargar también los datos del tab inicial
                 await getActiveLoansReport();
             } catch (err) {
-                console.error('Error loading initial summary:', err);
             }
         };
 
@@ -58,7 +57,6 @@ const ReportManagement = () => {
                     break;
             }
         } catch (err) {
-            console.error('Error loading tab data:', err);
         }
     };
 
@@ -90,17 +88,16 @@ const ReportManagement = () => {
     ];
 
     return (
-        <div className="p-6 bg-slate-900 min-h-screen">
+        <div>
             {/* Header */}
             <div className="mb-8">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-                            <BarChart3 className="h-8 w-8 text-orange-500" />
+                        <h1 className="text-3xl font-bold text-white mb-2">
                             Reportes y Consultas
                         </h1>
-                        <p className="text-slate-400 mt-2">
-                            Épica 6: Visualización de información clave para la toma de decisiones
+                        <p className="text-slate-400">
+                            Visualización de información clave para la toma de decisiones
                         </p>
                     </div>
 
@@ -116,54 +113,54 @@ const ReportManagement = () => {
 
                 {/* Resumen General */}
                 {generalSummary && (
-                    <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                            <div className="flex items-center gap-3">
-                                <div className="bg-orange-500/10 p-3 rounded-lg">
-                                    <RefreshCw className="h-6 w-6 text-orange-500" />
-                                </div>
-                                <div>
-                                    <p className="text-sm text-slate-400 font-medium">Préstamos Activos</p>
-                                    <p className="text-2xl font-bold text-white">
+                    <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 p-6 rounded-lg shadow-lg">
+                            <div className="flex items-start justify-between">
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium text-slate-400">Préstamos Activos</p>
+                                    <p className="text-3xl font-bold text-white">
                                         {generalSummary.activeLoans?.total || 0}
                                     </p>
-                                    <p className="text-xs text-slate-500">
+                                    <p className="text-sm text-slate-400">
                                         {generalSummary.activeLoans?.overdue || 0} atrasados
                                     </p>
                                 </div>
+                                <div className="p-3 rounded-lg bg-orange-500/10">
+                                    <RefreshCw className="h-6 w-6 text-orange-500" />
+                                </div>
                             </div>
                         </div>
 
-                        <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                            <div className="flex items-center gap-3">
-                                <div className="bg-red-500/10 p-3 rounded-lg">
-                                    <AlertTriangle className="h-6 w-6 text-red-500" />
-                                </div>
-                                <div>
-                                    <p className="text-sm text-slate-400 font-medium">Clientes Morosos</p>
-                                    <p className="text-2xl font-bold text-white">
+                        <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 p-6 rounded-lg shadow-lg">
+                            <div className="flex items-start justify-between">
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium text-slate-400">Clientes Morosos</p>
+                                    <p className="text-3xl font-bold text-white">
                                         {generalSummary.overdueClients?.totalClients || 0}
                                     </p>
-                                    <p className="text-xs text-slate-500">
+                                    <p className="text-sm text-slate-400">
                                         ${generalSummary.overdueClients?.totalOverdueAmount || 0} en multas
                                     </p>
                                 </div>
+                                <div className="p-3 rounded-lg bg-red-500/10">
+                                    <AlertTriangle className="h-6 w-6 text-red-500" />
+                                </div>
                             </div>
                         </div>
 
-                        <div className="bg-slate-800 p-4 rounded-lg border border-slate-700">
-                            <div className="flex items-center gap-3">
-                                <div className="bg-green-500/10 p-3 rounded-lg">
-                                    <BarChart3 className="h-6 w-6 text-green-500" />
-                                </div>
-                                <div>
-                                    <p className="text-sm text-slate-400 font-medium">Herramienta Top</p>
-                                    <p className="text-lg font-bold text-white truncate">
+                        <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 p-6 rounded-lg shadow-lg">
+                            <div className="flex items-start justify-between">
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium text-slate-400">Herramienta Top</p>
+                                    <p className="text-3xl font-bold text-white truncate">
                                         {generalSummary.popularTools?.mostPopularTool?.name || 'N/A'}
                                     </p>
-                                    <p className="text-xs text-slate-500">
+                                    <p className="text-sm text-slate-400">
                                         {generalSummary.popularTools?.mostPopularTool?.totalLoans || 0} préstamos
                                     </p>
+                                </div>
+                                <div className="p-3 rounded-lg bg-orange-500/10">
+                                    <BarChart3 className="h-6 w-6 text-orange-500" />
                                 </div>
                             </div>
                         </div>

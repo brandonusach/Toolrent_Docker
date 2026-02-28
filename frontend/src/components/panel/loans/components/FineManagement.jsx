@@ -1,4 +1,4 @@
-// loans/components/FineManagement.jsx - Gestión completa de multas
+﻿// loans/components/FineManagement.jsx - Gestión completa de multas
 import React, { useState, useEffect } from 'react';
 import {
     X,
@@ -44,7 +44,6 @@ const FineManagement = ({ onClose, onSuccess }) => {
             const response = await httpClient.get('/api/v1/clients/');
             setClients(response.data || []);
         } catch (err) {
-            console.error('Error loading clients:', err);
             setError('Error al cargar clientes');
         }
     };
@@ -57,7 +56,6 @@ const FineManagement = ({ onClose, onSuccess }) => {
             const fines = response.data || [];
             setClientFines(fines.filter(f => !f.paid));
         } catch (err) {
-            console.error('Error loading client fines:', err);
             setError('Error al cargar multas del cliente');
             setClientFines([]);
         } finally {
@@ -84,7 +82,6 @@ const FineManagement = ({ onClose, onSuccess }) => {
                 if (onSuccess) onSuccess();
             }, 1500);
         } catch (err) {
-            console.error('Error paying fine:', err);
             setError(err.message || 'Error al pagar la multa');
         } finally {
             setPayingFineId(null);
@@ -115,7 +112,7 @@ const FineManagement = ({ onClose, onSuccess }) => {
             'DAMAGE_REPAIR': 'text-yellow-400',
             'TOOL_REPLACEMENT': 'text-red-400'
         };
-        return colors[type] || 'text-gray-400';
+        return colors[type] || 'text-slate-400';
     };
 
     const calculateTotalUnpaid = (fines) => {
@@ -141,22 +138,22 @@ const FineManagement = ({ onClose, onSuccess }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center p-4 pt-8 z-50 overflow-y-auto">
-            <div className="bg-gray-800 rounded-lg shadow-xl max-w-6xl w-full mb-8 max-h-[calc(100vh-4rem)]">
+            <div className="bg-slate-800 rounded-lg shadow-xl max-w-6xl w-full mb-8 max-h-[calc(100vh-4rem)]">
                 <div className="max-h-[calc(100vh-4rem)] overflow-y-auto">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-700 sticky top-0 bg-gray-800 z-10">
+                <div className="flex items-center justify-between p-6 border-b border-slate-700/50 sticky top-0 bg-slate-800 z-10">
                     <div>
                         <h2 className="text-2xl font-bold text-white mb-1">
                             <DollarSign className="inline h-6 w-6 mr-2" />
                             Gestión de Multas
                         </h2>
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-slate-400 text-sm">
                             Consulta y paga multas pendientes de los clientes
                         </p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-white transition-colors"
+                        className="text-slate-400 hover:text-white transition-colors"
                     >
                         <X className="h-6 w-6" />
                     </button>
@@ -164,24 +161,24 @@ const FineManagement = ({ onClose, onSuccess }) => {
 
                 <div className="p-6 space-y-6">
                     {/* Estadísticas Rápidas */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-700 rounded-lg p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-700 rounded-lg p-4">
                         <div className="text-center">
                             <div className="text-3xl font-bold text-red-400">
                                 {unpaidFines.length}
                             </div>
-                            <div className="text-sm text-gray-300">Multas Pendientes</div>
+                            <div className="text-sm text-slate-300">Multas Pendientes</div>
                         </div>
                         <div className="text-center">
                             <div className="text-3xl font-bold text-orange-400">
                                 {clientsWithFines.length}
                             </div>
-                            <div className="text-sm text-gray-300">Clientes con Multas</div>
+                            <div className="text-sm text-slate-300">Clientes con Multas</div>
                         </div>
                         <div className="text-center">
                             <div className="text-3xl font-bold text-yellow-400">
                                 ${calculateTotalUnpaid(unpaidFines).toFixed(2)}
                             </div>
-                            <div className="text-sm text-gray-300">Total Pendiente</div>
+                            <div className="text-sm text-slate-300">Total Pendiente</div>
                         </div>
                     </div>
 
@@ -202,20 +199,20 @@ const FineManagement = ({ onClose, onSuccess }) => {
 
                     {/* Selector de Cliente */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-slate-300 mb-2">
                             <User className="h-4 w-4 inline mr-1" />
                             Seleccionar Cliente
                         </label>
                         <div className="space-y-2">
                             {/* Buscador */}
                             <div className="relative">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                                 <input
                                     type="text"
                                     placeholder="Buscar por nombre, email o teléfono..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    className="w-full pl-10 pr-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
                                 />
                             </div>
 
@@ -223,7 +220,7 @@ const FineManagement = ({ onClose, onSuccess }) => {
                             <select
                                 value={selectedClientId}
                                 onChange={(e) => setSelectedClientId(e.target.value)}
-                                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                             >
                                 <option value="">-- Selecciona un cliente --</option>
                                 {filteredClients.map(client => {
@@ -243,7 +240,7 @@ const FineManagement = ({ onClose, onSuccess }) => {
                     {loadingClient && (
                         <div className="flex items-center justify-center py-8">
                             <Loader className="h-8 w-8 animate-spin text-orange-500" />
-                            <span className="ml-2 text-gray-300">Cargando multas...</span>
+                            <span className="ml-2 text-slate-300">Cargando multas...</span>
                         </div>
                     )}
 
@@ -255,7 +252,7 @@ const FineManagement = ({ onClose, onSuccess }) => {
                                     Multas Pendientes
                                 </h3>
                                 {clientFines.length > 0 && (
-                                    <div className="text-sm text-gray-300">
+                                    <div className="text-sm text-slate-300">
                                         Total: <span className="font-bold text-yellow-400">
                                             ${calculateTotalUnpaid(clientFines).toFixed(2)}
                                         </span>
@@ -264,16 +261,16 @@ const FineManagement = ({ onClose, onSuccess }) => {
                             </div>
 
                             {clientFines.length === 0 ? (
-                                <div className="bg-gray-700 rounded-lg p-8 text-center">
+                                <div className="bg-slate-700 rounded-lg p-8 text-center">
                                     <CheckCircle className="h-12 w-12 text-green-400 mx-auto mb-3" />
-                                    <p className="text-gray-300">Este cliente no tiene multas pendientes</p>
+                                    <p className="text-slate-300">Este cliente no tiene multas pendientes</p>
                                 </div>
                             ) : (
                                 <div className="space-y-3">
                                     {clientFines.map(fine => (
                                         <div
                                             key={fine.id}
-                                            className="bg-gray-700 border border-gray-600 rounded-lg p-4"
+                                            className="bg-slate-700 border border-slate-600 rounded-lg p-4"
                                         >
                                             <div className="flex items-start justify-between">
                                                 <div className="flex-1 space-y-2">
@@ -289,21 +286,21 @@ const FineManagement = ({ onClose, onSuccess }) => {
 
                                                     {/* Descripción */}
                                                     {fine.description && (
-                                                        <div className="flex items-start text-gray-300">
+                                                        <div className="flex items-start text-slate-300">
                                                             <FileText className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
                                                             <span className="text-sm">{fine.description}</span>
                                                         </div>
                                                     )}
 
                                                     {/* Fecha de Emisión */}
-                                                    <div className="flex items-center text-gray-400 text-sm">
+                                                    <div className="flex items-center text-slate-400 text-sm">
                                                         <Calendar className="h-4 w-4 mr-2" />
                                                         Emitida: {formatDate(fine.issueDate)}
                                                     </div>
 
                                                     {/* Préstamo Relacionado */}
                                                     {fine.loan && (
-                                                        <div className="flex items-center text-gray-400 text-sm">
+                                                        <div className="flex items-center text-slate-400 text-sm">
                                                             <FileText className="h-4 w-4 mr-2" />
                                                             Préstamo ID: {fine.loan.id}
                                                         </div>
@@ -343,9 +340,9 @@ const FineManagement = ({ onClose, onSuccess }) => {
                                 Clientes con Multas Pendientes
                             </h3>
                             {clientsWithFines.length === 0 ? (
-                                <div className="bg-gray-700 rounded-lg p-8 text-center">
+                                <div className="bg-slate-700 rounded-lg p-8 text-center">
                                     <CheckCircle className="h-12 w-12 text-green-400 mx-auto mb-3" />
-                                    <p className="text-gray-300">No hay multas pendientes</p>
+                                    <p className="text-slate-300">No hay multas pendientes</p>
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -358,7 +355,7 @@ const FineManagement = ({ onClose, onSuccess }) => {
                                         return (
                                             <div
                                                 key={client.id}
-                                                className="bg-gray-700 border border-gray-600 rounded-lg p-4 hover:border-orange-500 transition-colors cursor-pointer"
+                                                className="bg-slate-700 border border-slate-600 rounded-lg p-4 hover:border-orange-500 transition-colors cursor-pointer"
                                                 onClick={() => setSelectedClientId(client.id.toString())}
                                             >
                                                 <div className="flex items-center justify-between mb-2">
@@ -369,7 +366,7 @@ const FineManagement = ({ onClose, onSuccess }) => {
                                                         {clientUnpaidFines.length} multa(s)
                                                     </span>
                                                 </div>
-                                                <div className="text-sm text-gray-400 mb-2">
+                                                <div className="text-sm text-slate-400 mb-2">
                                                     {client.email}
                                                 </div>
                                                 <div className="text-xl font-bold text-yellow-400">
@@ -385,10 +382,10 @@ const FineManagement = ({ onClose, onSuccess }) => {
                 </div>
 
                 {/* Footer */}
-                <div className="flex justify-end p-6 border-t border-gray-700">
+                <div className="flex justify-end p-6 border-t border-slate-700/50">
                     <button
                         onClick={onClose}
-                        className="px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                        className="px-6 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors"
                     >
                         Cerrar
                     </button>
@@ -400,4 +397,5 @@ const FineManagement = ({ onClose, onSuccess }) => {
 };
 
 export default FineManagement;
+
 

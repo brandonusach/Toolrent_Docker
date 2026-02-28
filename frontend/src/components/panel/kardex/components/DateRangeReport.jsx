@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
-import { Calendar, Download, BarChart3, TrendingUp, TrendingDown, Package } from 'lucide-react';
+﻿﻿import React, { useState } from 'react';
+import { Calendar, Download, BarChart3, TrendingUp, TrendingDown, Package, AlertCircle } from 'lucide-react';
 import { useKardex } from '../hooks/useKardex';
 import { formatDateTime } from '../../../../utils/dateUtils';
+import { getFriendlyError } from '../../../../utils/errorUtils';
 
 const DateRangeReport = ({ onViewDetail }) => {
-    const [dateRange, setDateRange] = useState({
-        startDate: '',
-        endDate: ''
-    });
+    const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
     const [movements, setMovements] = useState([]);
     const [loading, setLoading] = useState(false);
     const [hasSearched, setHasSearched] = useState(false);
+    const [searchError, setSearchError] = useState('');
 
     const { getMovementsByDateRange } = useKardex();
 
@@ -22,13 +21,15 @@ const DateRangeReport = ({ onViewDetail }) => {
     };
 
     const searchMovements = async () => {
+        setSearchError('');
+
         if (!dateRange.startDate || !dateRange.endDate) {
-            alert('Por favor selecciona ambas fechas');
+            setSearchError('Debes seleccionar ambas fechas para buscar movimientos.');
             return;
         }
 
         if (new Date(dateRange.startDate) > new Date(dateRange.endDate)) {
-            alert('La fecha de inicio debe ser anterior a la fecha de fin');
+            setSearchError('La fecha de inicio debe ser anterior o igual a la fecha de fin.');
             return;
         }
 
@@ -38,8 +39,7 @@ const DateRangeReport = ({ onViewDetail }) => {
             setMovements(result);
             setHasSearched(true);
         } catch (error) {
-            console.error('Error searching movements:', error);
-            alert('Error al buscar movimientos: ' + error.message);
+            setSearchError(getFriendlyError(error));
         } finally {
             setLoading(false);
         }
@@ -49,6 +49,7 @@ const DateRangeReport = ({ onViewDetail }) => {
         setDateRange({ startDate: '', endDate: '' });
         setMovements([]);
         setHasSearched(false);
+        setSearchError('');
     };
 
     const getQuickDateRange = (days) => {
@@ -103,35 +104,13 @@ const DateRangeReport = ({ onViewDetail }) => {
     };
 
 
-    const getToolStatusBadge = (status) => {
-        const badges = {
-            AVAILABLE: 'bg-green-500/10 text-green-400 border-green-500/30',
-            LOANED: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
-            IN_REPAIR: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30',
-            DECOMMISSIONED: 'bg-gray-500/10 text-gray-400 border-gray-500/30',
-            PARTIALLY_AVAILABLE: 'bg-orange-500/10 text-orange-400 border-orange-500/30'
-        };
-        return badges[status] || 'bg-slate-500/10 text-slate-400 border-slate-500/30';
-    };
-
-    const getToolStatusLabel = (status) => {
-        const labels = {
-            AVAILABLE: 'Disponible',
-            LOANED: 'Prestada',
-            IN_REPAIR: 'En Reparación',
-            DECOMMISSIONED: 'Dada de Baja',
-            PARTIALLY_AVAILABLE: 'Parcial'
-        };
-        return labels[status] || status;
-    };
-
     const getMovementColor = (type) => {
         const colors = {
             INITIAL_STOCK: 'bg-blue-500/20 text-blue-400',
             LOAN: 'bg-red-500/20 text-red-400',
             RETURN: 'bg-green-500/20 text-green-400',
             REPAIR: 'bg-yellow-500/20 text-yellow-400',
-            DECOMMISSION: 'bg-gray-500/20 text-gray-400',
+            DECOMMISSION: 'bg-slate-500/20 text-slate-400',
             RESTOCK: 'bg-purple-500/20 text-purple-400'
         };
         return colors[type] || 'bg-slate-500/20 text-slate-400';
@@ -168,8 +147,8 @@ const DateRangeReport = ({ onViewDetail }) => {
                         <input
                             type="date"
                             value={dateRange.startDate}
-                            onChange={(e) => handleDateChange('startDate', e.target.value)}
-                            className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            onChange={(e) => { handleDateChange('startDate', e.target.value); setSearchError(''); }}
+                            className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                         />
                     </div>
 
@@ -180,8 +159,8 @@ const DateRangeReport = ({ onViewDetail }) => {
                         <input
                             type="date"
                             value={dateRange.endDate}
-                            onChange={(e) => handleDateChange('endDate', e.target.value)}
-                            className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            onChange={(e) => { handleDateChange('endDate', e.target.value); setSearchError(''); }}
+                            className="w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                         />
                     </div>
 
@@ -189,7 +168,7 @@ const DateRangeReport = ({ onViewDetail }) => {
                         <button
                             onClick={searchMovements}
                             disabled={loading || !dateRange.startDate || !dateRange.endDate}
-                            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors"
+                            className="w-full px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:bg-slate-600 disabled:cursor-not-allowed transition-colors"
                         >
                             {loading ? 'Buscando...' : 'Generar Reporte'}
                         </button>
@@ -206,6 +185,14 @@ const DateRangeReport = ({ onViewDetail }) => {
                         )}
                     </div>
                 </div>
+
+                {/* Error de búsqueda */}
+                {searchError && (
+                    <div className="mt-3 p-3 bg-red-900/30 border border-red-500/50 rounded-lg flex items-start gap-2">
+                        <AlertCircle className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
+                        <p className="text-red-400 text-sm">{searchError}</p>
+                    </div>
+                )}
 
                 {/* Quick Date Ranges */}
                 <div className="flex flex-wrap gap-2 mt-4">
@@ -328,11 +315,9 @@ const DateRangeReport = ({ onViewDetail }) => {
                                 Movimientos Encontrados ({movements.length})
                             </h3>
                             <button
-                                onClick={() => {
-                                    // TODO: Implement export functionality
-                                    alert('Funcionalidad de exportación próximamente');
-                                }}
-                                className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                                disabled
+                                title="Funcionalidad de exportación disponible próximamente"
+                                className="flex items-center gap-2 px-3 py-2 bg-slate-600 text-slate-400 rounded-lg cursor-not-allowed opacity-60"
                             >
                                 <Download className="w-4 h-4" />
                                 Exportar
@@ -342,7 +327,7 @@ const DateRangeReport = ({ onViewDetail }) => {
 
                     {loading ? (
                         <div className="p-8 text-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
                             <p className="text-slate-400">Generando reporte...</p>
                         </div>
                     ) : movements.length === 0 ? (

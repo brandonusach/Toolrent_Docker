@@ -73,10 +73,10 @@ const PopularToolsReport = ({ data, loading }) => {
     };
 
     const getPopularityIcon = (position) => {
-        if (position === 0) return { icon: '🥇', color: 'text-yellow-400' };
-        if (position === 1) return { icon: '🥈', color: 'text-slate-300' };
-        if (position === 2) return { icon: '🥉', color: 'text-orange-400' };
-        return { icon: `${position + 1}°`, color: 'text-slate-400' };
+        if (position === 0) return { icon: '🥇', color: 'text-yellow-400', isMedal: true };
+        if (position === 1) return { icon: '🥈', color: 'text-slate-300', isMedal: true };
+        if (position === 2) return { icon: '🥉', color: 'text-orange-400', isMedal: true };
+        return { icon: null, color: 'text-slate-400', isMedal: false };
     };
 
     const getPopularityBar = (tool, maxLoans) => {
@@ -309,10 +309,15 @@ const PopularToolsReport = ({ data, loading }) => {
                                             <tr key={tool.id} className="hover:bg-slate-700/30 transition-colors">
                                                 <td className="px-4 py-4 whitespace-nowrap">
                                                     <div className="flex items-center gap-2">
-                                                        <span className={`text-2xl ${popularityIcon.color}`}>
-                                                            {popularityIcon.icon}
-                                                        </span>
-                                                        <span className="font-medium text-white">#{index + 1}</span>
+                                                        {popularityIcon.isMedal ? (
+                                                            <span className={`text-2xl ${popularityIcon.color}`}>
+                                                                {popularityIcon.icon}
+                                                            </span>
+                                                        ) : (
+                                                            <span className={`text-sm font-bold ${popularityIcon.color}`}>
+                                                                #{index + 1}
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 </td>
                                                 <td className="px-4 py-4 whitespace-nowrap">
@@ -381,9 +386,15 @@ const PopularToolsReport = ({ data, loading }) => {
                                     return (
                                         <div key={tool.id} className="flex items-center gap-4">
                                             <div className="flex items-center gap-2 w-8">
-                                                <span className={`text-lg ${popularityIcon.color}`}>
-                                                    {popularityIcon.icon}
-                                                </span>
+                                                {popularityIcon.isMedal ? (
+                                                    <span className={`text-lg ${popularityIcon.color}`}>
+                                                        {popularityIcon.icon}
+                                                    </span>
+                                                ) : (
+                                                    <span className={`text-sm font-bold ${popularityIcon.color}`}>
+                                                        #{index + 1}
+                                                    </span>
+                                                )}
                                             </div>
 
                                             <div className="min-w-0 flex-1">

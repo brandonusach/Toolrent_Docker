@@ -108,7 +108,7 @@ const LoanManagement = () => {
     };
 
     return (
-        <div className="p-6 bg-gray-900 min-h-screen">
+        <div>
             {/* Header */}
             <div className="mb-8">
                 <div className="flex items-center justify-between mb-4">
@@ -116,21 +116,21 @@ const LoanManagement = () => {
                         <h1 className="text-3xl font-bold text-white mb-2">
                             Gestión de Préstamos y Devoluciones
                         </h1>
-                        <p className="text-gray-400">
+                        <p className="text-slate-400">
                             Control completo del ciclo de préstamos de herramientas
                         </p>
                     </div>
                     <div className="flex space-x-3">
                         <button
                             onClick={handleCreateLoan}
-                            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                            className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 rounded-lg font-semibold transition-colors duration-200 shadow-lg hover:shadow-orange-500/30"
                         >
-                            <Plus className="h-5 w-5 mr-2" />
+                            <Plus className="h-5 w-5" />
                             Nuevo Préstamo
                         </button>
                         <button
                             onClick={handleManageFines}
-                            className="flex items-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+                            className="flex items-center px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white rounded-lg transition-colors border border-slate-600"
                         >
                             <DollarSign className="h-5 w-5 mr-2" />
                             Gestionar Multas
@@ -138,7 +138,7 @@ const LoanManagement = () => {
                         <button
                             onClick={refreshData}
                             disabled={loading}
-                            className="flex items-center px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50"
+                            className="flex items-center px-4 py-2 bg-slate-700 text-slate-300 rounded-lg hover:bg-slate-600 transition-colors disabled:opacity-50"
                         >
                             <RefreshCw className={`h-5 w-5 mr-2 ${loading ? 'animate-spin' : ''}`} />
                             Actualizar
@@ -147,25 +147,46 @@ const LoanManagement = () => {
                 </div>
 
                 {/* Quick Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-800 rounded-lg p-4 border border-gray-700">
-                    <div className="text-center">
-                        <div className="text-2xl font-bold text-blue-400">{displayStats.totalActive}</div>
-                        <div className="text-sm text-gray-400">Préstamos Activos</div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 p-6 rounded-lg shadow-lg">
+                        <div className="flex items-start justify-between">
+                            <div className="space-y-1">
+                                <p className="text-sm font-medium text-slate-400">Préstamos Activos</p>
+                                <p className="text-3xl font-bold text-white">{displayStats.totalActive}</p>
+                            </div>
+                            <div className="p-3 rounded-lg bg-gradient-to-br from-sky-500 to-sky-600">
+                                <RefreshCw className="h-6 w-6 text-white" />
+                            </div>
+                        </div>
                     </div>
-                    <div className="text-center">
-                        <div className="text-2xl font-bold text-red-400">{displayStats.totalOverdue}</div>
-                        <div className="text-sm text-gray-400">Atrasados</div>
+                    <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 p-6 rounded-lg shadow-lg">
+                        <div className="flex items-start justify-between">
+                            <div className="space-y-1">
+                                <p className="text-sm font-medium text-slate-400">Atrasados</p>
+                                <p className="text-3xl font-bold text-red-400">{displayStats.totalOverdue}</p>
+                            </div>
+                            <div className="p-3 rounded-lg bg-gradient-to-br from-red-500 to-red-600">
+                                <AlertTriangle className="h-6 w-6 text-white" />
+                            </div>
+                        </div>
                     </div>
-                    <div className="text-center">
-                        <div className="text-2xl font-bold text-orange-400">{displayStats.overdueRate}%</div>
-                        <div className="text-sm text-gray-400">Tasa de Atraso</div>
+                    <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 p-6 rounded-lg shadow-lg">
+                        <div className="flex items-start justify-between">
+                            <div className="space-y-1">
+                                <p className="text-sm font-medium text-slate-400">Tasa de Atraso</p>
+                                <p className="text-3xl font-bold text-orange-400">{displayStats.overdueRate}%</p>
+                            </div>
+                            <div className="p-3 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600">
+                                <BarChart3 className="h-6 w-6 text-white" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Tab Navigation */}
             <div className="mb-6">
-                <div className="flex space-x-1 bg-gray-800 p-1 rounded-lg border border-gray-700">
+                <div className="flex space-x-1 bg-slate-800 p-1 rounded-lg border border-slate-700/50">
                     {[
                         { id: 'active', label: 'Préstamos', icon: RefreshCw },
                         { id: 'overdue', label: 'Atrasados', icon: AlertTriangle },
@@ -179,7 +200,7 @@ const LoanManagement = () => {
                                 className={`flex items-center px-4 py-2 rounded-md transition-colors ${
                                     activeTab === tab.id
                                         ? 'bg-orange-600 text-white'
-                                        : 'text-gray-400 hover:text-white hover:bg-gray-700'
+                                        : 'text-slate-400 hover:text-white hover:bg-slate-700'
                                 }`}
                             >
                                 <Icon className="h-4 w-4 mr-2" />

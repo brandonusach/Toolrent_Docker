@@ -1,6 +1,7 @@
-// inventory/components/StockManager.jsx - PURE VERSION
+﻿﻿// inventory/components/StockManager.jsx - PURE VERSION
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
+import { TrendingUp, TrendingDown, RefreshCw, AlertCircle } from 'lucide-react';
+import { getFriendlyError, getFieldErrors } from '../../../../utils/errorUtils';
 
 const StockManager = ({ tool, type, onUpdateStock, onClose, onSuccess }) => {
     const [quantity, setQuantity] = useState(1);
@@ -9,6 +10,7 @@ const StockManager = ({ tool, type, onUpdateStock, onClose, onSuccess }) => {
     const [loadingInstances, setLoadingInstances] = useState(false);
     const [loading, setLoading] = useState(false);
     const [serverErrors, setServerErrors] = useState({});
+    const [generalError, setGeneralError] = useState('');
 
     const isAddStock = type === 'add-stock';
     const API_BASE = 'http://localhost:8081/api';
@@ -35,7 +37,6 @@ const StockManager = ({ tool, type, onUpdateStock, onClose, onSuccess }) => {
                 setInstances([]);
             }
         } catch (error) {
-            console.error('Error loading instances:', error);
             setInstances([]);
         } finally {
             setLoadingInstances(false);
@@ -45,10 +46,10 @@ const StockManager = ({ tool, type, onUpdateStock, onClose, onSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setServerErrors({});
+        setGeneralError('');
 
-        // Validar si es dar de baja que se haya seleccionado una instancia
         if (!isAddStock && !selectedInstanceId) {
-            alert('Debe seleccionar una herramienta específica para dar de baja');
+            setGeneralError('Debe seleccionar una herramienta específica para dar de baja.');
             return;
         }
 
@@ -56,32 +57,17 @@ const StockManager = ({ tool, type, onUpdateStock, onClose, onSuccess }) => {
 
         try {
             if (isAddStock) {
-                // Agregar stock con cantidad
                 await onUpdateStock(tool.id, quantity);
-                alert(`${quantity} unidad(es) agregadas exitosamente`);
             } else {
-                // Dar de baja: enviar el instanceId específico seleccionado
                 await onUpdateStock(tool.id, parseInt(selectedInstanceId));
-                alert('Herramienta dada de baja exitosamente');
             }
-
             onSuccess();
         } catch (error) {
-            console.error('Error updating stock:', error);
-
-            // Handle server errors
-            if (error.response && error.response.data) {
-                const errorData = error.response.data;
-
-                if (typeof errorData === 'object' && errorData.fieldErrors) {
-                    setServerErrors(errorData.fieldErrors);
-                } else if (typeof errorData === 'string') {
-                    alert(`Error: ${errorData}`);
-                } else {
-                    alert('Error: Unknown server error');
-                }
+            const fieldErrors = getFieldErrors(error);
+            if (fieldErrors) {
+                setServerErrors(fieldErrors);
             } else {
-                alert(`Error: ${error.message || 'Error al actualizar el stock'}`);
+                setGeneralError(getFriendlyError(error));
             }
         } finally {
             setLoading(false);
@@ -110,19 +96,19 @@ const StockManager = ({ tool, type, onUpdateStock, onClose, onSuccess }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
+            <div className="bg-slate-800 rounded-lg p-6 w-full max-w-md">
                 <div className="flex items-center mb-4">
                     <Icon className="h-6 w-6 text-white mr-2" />
                     <h3 className="text-xl font-bold text-white">{getTitle()}</h3>
                 </div>
 
                 {/* Tool Information */}
-                <div className="mb-6 p-4 bg-gray-700 rounded-lg">
-                    <p className="text-gray-300 mb-2">
+                <div className="mb-6 p-4 bg-slate-700 rounded-lg">
+                    <p className="text-slate-300 mb-2">
                         <span className="font-semibold">Herramienta:</span>
                         <span className="text-white ml-2">{tool.name}</span>
                     </p>
-                    <p className="text-gray-300 mb-2">
+                    <p className="text-slate-300 mb-2">
                         <span className="font-semibold">Stock actual:</span>
                         <span className="text-white ml-2">{tool.currentStock || 0} unidades</span>
                     </p>
@@ -130,10 +116,17 @@ const StockManager = ({ tool, type, onUpdateStock, onClose, onSuccess }) => {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Error general */}
+                    {generalError && (
+                        <div className="p-3 bg-red-900/30 border border-red-500/50 rounded-lg flex items-start gap-2">
+                            <AlertCircle className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
+                            <p className="text-red-400 text-sm">{generalError}</p>
+                        </div>
+                    )}
                     {isAddStock ? (
                         /* Quantity Field for Adding Stock */
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-slate-300 mb-2">
                                 Cantidad a agregar *
                             </label>
                             <input
@@ -144,10 +137,10 @@ const StockManager = ({ tool, type, onUpdateStock, onClose, onSuccess }) => {
                                     setQuantity(parseInt(e.target.value) || 1);
                                     setServerErrors({}); // Clear errors on change
                                 }}
-                                className={`w-full px-3 py-2 bg-gray-700 border rounded-lg text-white focus:outline-none ${
+                                className={`w-full px-3 py-2 bg-slate-700 border rounded-lg text-white focus:outline-none ${
                                     serverErrors.quantity
                                         ? 'border-red-500 focus:border-red-400'
-                                        : 'border-gray-600 focus:border-orange-500'
+                                        : 'border-slate-600 focus:border-orange-500'
                                 }`}
                                 disabled={loading}
                             />
@@ -158,16 +151,16 @@ const StockManager = ({ tool, type, onUpdateStock, onClose, onSuccess }) => {
                     ) : (
                         /* Instance Selector for Decommissioning */
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-slate-300 mb-2">
                                 Seleccionar herramienta específica a dar de baja *
                             </label>
                             {loadingInstances ? (
-                                <div className="flex items-center justify-center py-4 text-gray-400">
+                                <div className="flex items-center justify-center py-4 text-slate-400">
                                     <RefreshCw className="h-4 w-4 animate-spin mr-2" />
                                     Cargando herramientas...
                                 </div>
                             ) : instances.length === 0 ? (
-                                <div className="text-center py-4 text-gray-400">
+                                <div className="text-center py-4 text-slate-400">
                                     No hay herramientas disponibles para dar de baja
                                 </div>
                             ) : (
@@ -177,7 +170,7 @@ const StockManager = ({ tool, type, onUpdateStock, onClose, onSuccess }) => {
                                         setSelectedInstanceId(e.target.value);
                                         setServerErrors({});
                                     }}
-                                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-orange-500"
+                                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-orange-500"
                                     disabled={loading}
                                     required
                                 >
@@ -214,7 +207,7 @@ const StockManager = ({ tool, type, onUpdateStock, onClose, onSuccess }) => {
                             type="button"
                             onClick={onClose}
                             disabled={loading}
-                            className="flex-1 bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50"
+                            className="flex-1 bg-slate-600 text-white py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50"
                         >
                             Cancelar
                         </button>
@@ -222,8 +215,8 @@ const StockManager = ({ tool, type, onUpdateStock, onClose, onSuccess }) => {
                 </form>
 
                 {/* Informational Note */}
-                <div className="mt-4 p-3 bg-gray-700 rounded-lg">
-                    <p className="text-xs text-gray-400">
+                <div className="mt-4 p-3 bg-slate-700 rounded-lg">
+                    <p className="text-xs text-slate-400">
                         {isAddStock
                             ? 'Esta acción agregará nuevas herramientas al inventario.'
                             : 'Esta acción dará de baja la herramienta específica seleccionada (se eliminará del stock disponible).'

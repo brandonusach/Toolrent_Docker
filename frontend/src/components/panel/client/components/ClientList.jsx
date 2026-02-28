@@ -1,5 +1,7 @@
-import React from 'react';
-import { Eye, Edit, Trash2, UserX } from 'lucide-react';
+﻿import React, { useState } from 'react';
+import { Eye, Edit, Trash2, UserX, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const ITEMS_OPTIONS = [10, 15, 20];
 
 const ClientList = ({
                         clients = [],
@@ -8,6 +10,8 @@ const ClientList = ({
                         onDeleteClient,
                         isAdmin = false
                     }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
 
     const getStatusBadge = (status) => {
         const statusStyles = {
@@ -49,23 +53,33 @@ const ClientList = ({
         return (
             <div className="p-12 text-center">
                 <div className="mb-4">
-                    <UserX className="mx-auto h-16 w-16 text-gray-400" />
+                    <UserX className="mx-auto h-16 w-16 text-slate-400" />
                 </div>
                 <h3 className="text-xl font-medium text-white mb-2">
                     No hay clientes disponibles
                 </h3>
-                <p className="text-gray-400">
+                <p className="text-slate-400">
                     No se encontraron clientes que coincidan con los criterios de búsqueda.
                 </p>
             </div>
         );
     }
 
+    // Paginación
+    const totalPages = Math.ceil(clients.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedClients = clients.slice(startIndex, startIndex + itemsPerPage);
+
+    const handleItemsPerPageChange = (newValue) => {
+        setItemsPerPage(newValue);
+        setCurrentPage(1);
+    };
+
     return (
         <div className="overflow-hidden">
             {/* Header de la tabla */}
-            <div className="bg-gray-750 px-6 py-4 border-b border-gray-600">
-                <div className="grid grid-cols-12 gap-4 text-sm font-medium text-gray-300 uppercase tracking-wide">
+            <div className="bg-slate-750 px-6 py-4 border-b border-slate-600">
+                <div className="grid grid-cols-12 gap-4 text-sm font-medium text-slate-300 uppercase tracking-wide">
                     <div className="col-span-3">Cliente</div>
                     <div className="col-span-2">RUT</div>
                     <div className="col-span-3">Contacto</div>
@@ -75,11 +89,11 @@ const ClientList = ({
             </div>
 
             {/* Lista de clientes */}
-            <div className="divide-y divide-gray-700">
-                {clients.map((client) => (
+            <div className="divide-y divide-slate-700/50">
+                {paginatedClients.map((client) => (
                     <div
                         key={client.id}
-                        className="px-6 py-4 hover:bg-gray-700/30 transition-colors duration-200"
+                        className="px-6 py-4 hover:bg-slate-700/30 transition-colors duration-200"
                     >
                         <div className="grid grid-cols-12 gap-4 items-center">
                             {/* Información del cliente */}
@@ -96,7 +110,7 @@ const ClientList = ({
                                         <p className="text-white font-medium">
                                             {client.name}
                                         </p>
-                                        <p className="text-sm text-gray-400">
+                                        <p className="text-sm text-slate-400">
                                             ID: {client.id}
                                         </p>
                                     </div>
@@ -115,7 +129,7 @@ const ClientList = ({
                                 <p className="text-white text-sm">
                                     {formatPhone(client.phone)}
                                 </p>
-                                <p className="text-gray-400 text-sm">
+                                <p className="text-slate-400 text-sm">
                                     {client.email}
                                 </p>
                             </div>
@@ -131,7 +145,7 @@ const ClientList = ({
                                     {/* Ver detalles */}
                                     <button
                                         onClick={() => onViewClient(client)}
-                                        className="p-2 text-gray-400 hover:text-blue-400 hover:bg-gray-700 rounded-lg transition-colors duration-200"
+                                        className="p-2 text-slate-400 hover:text-blue-400 hover:bg-slate-700 rounded-lg transition-colors duration-200"
                                         title="Ver detalles"
                                     >
                                         <Eye size={16} />
@@ -141,7 +155,7 @@ const ClientList = ({
                                     {isAdmin && (
                                         <button
                                             onClick={() => onEditClient(client)}
-                                            className="p-2 text-gray-400 hover:text-green-400 hover:bg-gray-700 rounded-lg transition-colors duration-200"
+                                            className="p-2 text-slate-400 hover:text-green-400 hover:bg-slate-700 rounded-lg transition-colors duration-200"
                                             title="Editar cliente"
                                         >
                                             <Edit size={16} />
@@ -153,7 +167,7 @@ const ClientList = ({
                                     {isAdmin && (
                                         <button
                                             onClick={() => onDeleteClient(client)}
-                                            className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded-lg transition-colors duration-200"
+                                            className="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-700 rounded-lg transition-colors duration-200"
                                             title="Eliminar cliente"
                                         >
                                             <Trash2 size={16} />
@@ -165,6 +179,93 @@ const ClientList = ({
                     </div>
                 ))}
             </div>
+
+            {/* Paginación */}
+            {clients.length > 0 && (
+                <div className="px-6 py-4 border-t border-slate-700/50 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-800/40">
+                    {/* Info y selector */}
+                    <div className="flex items-center gap-3 text-sm text-slate-400">
+                        <span>
+                            Mostrando {startIndex + 1}–{Math.min(startIndex + itemsPerPage, clients.length)} de {clients.length} clientes
+                        </span>
+                        <span className="text-slate-600">|</span>
+                        <span>Filas por página:</span>
+                        <select
+                            value={itemsPerPage}
+                            onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+                            className="bg-slate-700 border border-slate-600 text-white rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
+                        >
+                            {ITEMS_OPTIONS.map(n => (
+                                <option key={n} value={n}>{n}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Controles de página */}
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={() => setCurrentPage(1)}
+                            disabled={currentPage === 1}
+                            className="px-2 py-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-xs"
+                            title="Primera página"
+                        >
+                            «
+                        </button>
+                        <button
+                            onClick={() => setCurrentPage(p => p - 1)}
+                            disabled={currentPage === 1}
+                            className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                            title="Página anterior"
+                        >
+                            <ChevronLeft className="h-4 w-4" />
+                        </button>
+
+                        {/* Números de página */}
+                        {Array.from({ length: totalPages }, (_, i) => i + 1)
+                            .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+                            .reduce((acc, p, idx, arr) => {
+                                if (idx > 0 && p - arr[idx - 1] > 1) acc.push('...');
+                                acc.push(p);
+                                return acc;
+                            }, [])
+                            .map((item, idx) =>
+                                item === '...' ? (
+                                    <span key={`ellipsis-${idx}`} className="px-2 text-slate-500 text-sm">…</span>
+                                ) : (
+                                    <button
+                                        key={item}
+                                        onClick={() => setCurrentPage(item)}
+                                        className={`min-w-[2rem] h-8 rounded text-sm font-medium transition-colors ${
+                                            currentPage === item
+                                                ? 'bg-orange-600 text-white'
+                                                : 'text-slate-400 hover:text-white hover:bg-slate-700'
+                                        }`}
+                                    >
+                                        {item}
+                                    </button>
+                                )
+                            )
+                        }
+
+                        <button
+                            onClick={() => setCurrentPage(p => p + 1)}
+                            disabled={currentPage === totalPages}
+                            className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                            title="Página siguiente"
+                        >
+                            <ChevronRight className="h-4 w-4" />
+                        </button>
+                        <button
+                            onClick={() => setCurrentPage(totalPages)}
+                            disabled={currentPage === totalPages}
+                            className="px-2 py-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-xs"
+                            title="Última página"
+                        >
+                            »
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

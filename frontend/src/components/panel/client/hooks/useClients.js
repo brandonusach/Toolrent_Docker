@@ -28,12 +28,11 @@ export const useClients = () => {
         try {
             const response = await httpClient.post('/api/v1/clients/', clientData);
             const newClient = response.data;
-
             setClients(prevClients => [...prevClients, newClient]);
             return newClient;
         } catch (err) {
-            console.error('Error creating client:', err);
-            throw new Error(err.message || 'Error al crear el cliente');
+            // Propagar el error original para que ClientForm pueda acceder a error.response.data
+            throw err;
         }
     }, []);
 
@@ -65,8 +64,7 @@ export const useClients = () => {
             setClients(prevClients => prevClients.filter(client => client.id !== clientId));
             return true;
         } catch (err) {
-            console.error('Error deleting client:', err);
-            throw new Error(err.message || 'Error al eliminar el cliente');
+            throw err;
         }
     }, []);
 

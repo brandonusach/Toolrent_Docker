@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+﻿import React, { useState, useMemo, useEffect } from 'react';
 import {
     AlertTriangle,
     Calendar,
@@ -140,19 +140,19 @@ const OverdueLoans = ({ loans, loading, onReturnTool, onRefresh }) => {
 
     if (loading) {
         return (
-            <div className="bg-gray-800 rounded-lg border border-gray-700 p-8">
+            <div className="bg-slate-800 rounded-lg border border-slate-700/50 p-8">
                 <div className="flex items-center justify-center">
                     <Loader className="h-8 w-8 animate-spin text-red-500 mr-3" />
-                    <span className="text-gray-300">Cargando préstamos atrasados...</span>
+                    <span className="text-slate-300">Cargando préstamos atrasados...</span>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="bg-gray-800 rounded-lg border border-gray-700">
+        <div className="bg-slate-800 rounded-lg border border-slate-700/50">
             {/* Header con estadísticas */}
-            <div className="p-6 border-b border-gray-700">
+            <div className="p-6 border-b border-slate-700/50">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center">
                         <AlertTriangle className="h-6 w-6 text-red-400 mr-2" />
@@ -160,7 +160,7 @@ const OverdueLoans = ({ loans, loading, onReturnTool, onRefresh }) => {
                     </div>
                     <button
                         onClick={onRefresh}
-                        className="flex items-center px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 transition-colors"
+                        className="flex items-center px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-600 transition-colors"
                     >
                         <RefreshCw className="h-4 w-4 mr-1" />
                         Actualizar
@@ -190,24 +190,24 @@ const OverdueLoans = ({ loans, loading, onReturnTool, onRefresh }) => {
                 {/* Filtros y búsqueda */}
                 <div className="flex flex-col sm:flex-row gap-4">
                     <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
                         <input
                             type="text"
                             placeholder="Buscar por cliente, herramienta o ID..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-red-500"
+                            className="w-full pl-10 pr-4 py-2 bg-slate-700 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-red-500"
                         />
                     </div>
 
                     <div className="flex items-center space-x-2">
-                        <span className="text-gray-400 text-sm">Ordenar por:</span>
+                        <span className="text-slate-400 text-sm">Ordenar por:</span>
                         <button
                             onClick={() => handleSort('daysOverdue')}
                             className={`flex items-center px-3 py-2 rounded-md text-sm transition-colors ${
                                 sortBy === 'daysOverdue'
                                     ? 'bg-red-600 text-white'
-                                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                             }`}
                         >
                             Días atraso
@@ -220,7 +220,7 @@ const OverdueLoans = ({ loans, loading, onReturnTool, onRefresh }) => {
                             className={`flex items-center px-3 py-2 rounded-md text-sm transition-colors ${
                                 sortBy === 'clientName'
                                     ? 'bg-red-600 text-white'
-                                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                             }`}
                         >
                             Cliente
@@ -233,7 +233,7 @@ const OverdueLoans = ({ loans, loading, onReturnTool, onRefresh }) => {
                             className={`flex items-center px-3 py-2 rounded-md text-sm transition-colors ${
                                 sortBy === 'estimatedLateFine'
                                     ? 'bg-red-600 text-white'
-                                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                             }`}
                         >
                             Multa est.
@@ -246,10 +246,10 @@ const OverdueLoans = ({ loans, loading, onReturnTool, onRefresh }) => {
             </div>
 
             {/* Lista de préstamos atrasados */}
-            <div className="divide-y divide-gray-700">
+            <div className="divide-y divide-slate-700/50">
                 {filteredLoans.length === 0 ? (
-                    <div className="p-8 text-center text-gray-400">
-                        <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-gray-500" />
+                    <div className="p-8 text-center text-slate-400">
+                        <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-slate-500" />
                         <p>No hay préstamos atrasados</p>
                         {searchTerm && (
                             <p className="text-sm mt-2">
@@ -259,7 +259,7 @@ const OverdueLoans = ({ loans, loading, onReturnTool, onRefresh }) => {
                     </div>
                 ) : (
                     filteredLoans.map((loan) => (
-                        <div key={loan.id} className="p-6 hover:bg-gray-750 transition-colors">
+                        <div key={loan.id} className="p-6 hover:bg-slate-750 transition-colors">
                             <div className="flex items-start justify-between">
                                 {/* Información principal */}
                                 <div className="flex-1">
@@ -281,18 +281,18 @@ const OverdueLoans = ({ loans, loading, onReturnTool, onRefresh }) => {
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
                                         {/* Cliente */}
-                                        <div className="bg-gray-700 rounded-lg p-3">
-                                            <span className="text-gray-400 flex items-center mb-1">
+                                        <div className="bg-slate-700 rounded-lg p-3">
+                                            <span className="text-slate-400 flex items-center mb-1">
                                                 <User className="h-4 w-4 mr-1" />
                                                 Cliente:
                                             </span>
                                             <p className="text-white font-medium">{loan.client?.name}</p>
-                                            <div className="flex items-center text-xs text-gray-400 mt-1">
+                                            <div className="flex items-center text-xs text-slate-400 mt-1">
                                                 <Mail className="h-3 w-3 mr-1" />
                                                 {loan.client?.email}
                                             </div>
                                             {loan.client?.phone && (
-                                                <div className="flex items-center text-xs text-gray-400 mt-1">
+                                                <div className="flex items-center text-xs text-slate-400 mt-1">
                                                     <Phone className="h-3 w-3 mr-1" />
                                                     {loan.client.phone}
                                                 </div>
@@ -300,18 +300,18 @@ const OverdueLoans = ({ loans, loading, onReturnTool, onRefresh }) => {
                                         </div>
 
                                         {/* Herramienta */}
-                                        <div className="bg-gray-700 rounded-lg p-3">
-                                            <span className="text-gray-400 flex items-center mb-1">
+                                        <div className="bg-slate-700 rounded-lg p-3">
+                                            <span className="text-slate-400 flex items-center mb-1">
                                                 <Package2 className="h-4 w-4 mr-1" />
                                                 Herramienta:
                                             </span>
                                             <p className="text-white font-medium">{loan.tool?.name}</p>
-                                            <p className="text-gray-400 text-xs">Valor: ${loan.tool?.replacementValue}</p>
+                                            <p className="text-slate-400 text-xs">Valor: ${loan.tool?.replacementValue}</p>
                                         </div>
 
                                         {/* Fechas y tiempo */}
-                                        <div className="bg-gray-700 rounded-lg p-3">
-                                            <span className="text-gray-400 flex items-center mb-1">
+                                        <div className="bg-slate-700 rounded-lg p-3">
+                                            <span className="text-slate-400 flex items-center mb-1">
                                                 <Calendar className="h-4 w-4 mr-1" />
                                                 Fechas:
                                             </span>
@@ -321,7 +321,7 @@ const OverdueLoans = ({ loans, loading, onReturnTool, onRefresh }) => {
                                             <p className="text-red-400 text-xs font-medium">
                                                 Debía devolver: {formatDateLocal(loan.agreedReturnDate)}
                                             </p>
-                                            <p className="text-gray-400 text-xs">
+                                            <p className="text-slate-400 text-xs">
                                                 <Clock className="h-3 w-3 inline mr-1" />
                                                 Duración: {loan.loanDuration} días
                                             </p>
@@ -330,9 +330,9 @@ const OverdueLoans = ({ loans, loading, onReturnTool, onRefresh }) => {
 
                                     {/* Notas del préstamo */}
                                     {loan.notes && (
-                                        <div className="mt-3 bg-gray-700 rounded-lg p-3">
-                                            <span className="text-gray-400 text-sm font-medium">Notas:</span>
-                                            <p className="text-gray-300 text-sm mt-1">{loan.notes}</p>
+                                        <div className="mt-3 bg-slate-700 rounded-lg p-3">
+                                            <span className="text-slate-400 text-sm font-medium">Notas:</span>
+                                            <p className="text-slate-300 text-sm mt-1">{loan.notes}</p>
                                         </div>
                                     )}
 

@@ -1,0 +1,15 @@
+FROM node:20.19-bullseye
+
+WORKDIR /app
+
+# Solo copiamos package.json para instalar dependencias en la imagen
+COPY package*.json ./
+RUN npm ci
+
+# El código fuente se monta como volumen en runtime (no se copia aquí)
+# Esto permite hot reload sin reconstruir la imagen
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+

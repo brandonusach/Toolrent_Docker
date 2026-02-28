@@ -1,4 +1,4 @@
-// loans/components/LoanForm.jsx - Formulario para crear préstamos con validación visual
+﻿// loans/components/LoanForm.jsx - Formulario para crear préstamos con validación visual
 import React, { useState, useEffect } from 'react';
 import { X, User, Wrench, Calendar, FileText, AlertCircle, CheckCircle, Loader } from 'lucide-react';
 import httpClient from "../../../../http-common";
@@ -37,13 +37,11 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
     const loadClients = async () => {
         try {
             const response = await httpClient.get('/api/v1/clients/');
-            console.log('Clients loaded:', response.data); // Debug
             // Mostrar TODOS los clientes activos, incluso los que tienen multas
             // La restricción se mostrará en el componente ClientValidation
             const activeClients = response.data.filter(client => client.status === 'ACTIVE');
             setClients(activeClients);
         } catch (err) {
-            console.error('Error loading clients:', err);
             setError('Error al cargar los clientes');
         }
     };
@@ -51,13 +49,11 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
     const loadTools = async () => {
         try {
             const response = await httpClient.get('/api/v1/tools/');
-            console.log('Tools loaded:', response.data); // Debug
             const availableTools = response.data.filter(tool =>
                 tool.status === 'AVAILABLE' && tool.currentStock > 0
             );
             setTools(availableTools);
         } catch (err) {
-            console.error('Error loading tools:', err);
             setError('Error al cargar las herramientas');
         }
     };
@@ -89,7 +85,6 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
 
             // No necesitamos setComprehensiveValidation ya que usamos los componentes individuales
         } catch (err) {
-            console.error('Error validating loan:', err);
         } finally {
             setValidating(false);
         }
@@ -137,13 +132,6 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
         const toolAvailable = toolAvailability?.finallyAvailable !== false;
         const canCreate = Boolean(clientEligible && toolAvailable);
 
-        console.log('Validation check:', {
-            clientEligible,
-            toolAvailable,
-            canCreate,
-            clientValidation,
-            toolAvailability
-        });
 
         if (!canCreate) {
             let errorMsg = 'No se puede crear el préstamo: ';
@@ -182,14 +170,11 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
                 throw new Error('La fecha de devolución no puede ser anterior a hoy');
             }
 
-            console.log('Sending loan data:', loanData); // Debug
 
             const result = await onSubmit(loanData);
-            console.log('Loan creation result:', result); // Debug
 
             onSuccess();
         } catch (err) {
-            console.error('Error creating loan:', err);
             const errorMsg = err.response?.data?.message ||
                 err.response?.data ||
                 err.message ||
@@ -229,14 +214,14 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center p-4 pt-8 z-50 overflow-y-auto">
-            <div className="bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full mb-8 max-h-[calc(100vh-4rem)]">
+            <div className="bg-slate-800 rounded-lg shadow-xl max-w-4xl w-full mb-8 max-h-[calc(100vh-4rem)]">
                 <div className="max-h-[calc(100vh-4rem)] overflow-y-auto">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-700 sticky top-0 bg-gray-800 z-10">
+                <div className="flex items-center justify-between p-6 border-b border-slate-700/50 sticky top-0 bg-slate-800 z-10">
                     <h2 className="text-xl font-bold text-white">Crear Nuevo Préstamo</h2>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-white transition-colors"
+                        className="text-slate-400 hover:text-white transition-colors"
                     >
                         <X className="h-6 w-6" />
                     </button>
@@ -248,7 +233,7 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
                         <div className="space-y-6">
                             {/* Cliente */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                <label className="block text-sm font-medium text-slate-300 mb-2">
                                     <User className="h-4 w-4 inline mr-1" />
                                     Cliente
                                 </label>
@@ -257,7 +242,7 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
                                     value={formData.clientId}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                                 >
                                     <option value="">Seleccionar cliente...</option>
                                     {clients.map(client => (
@@ -267,7 +252,7 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
                                     ))}
                                 </select>
                                 {selectedClient && (
-                                    <p className="text-sm text-gray-400 mt-1">
+                                    <p className="text-sm text-slate-400 mt-1">
                                         Estado: {safeRender(selectedClient.status)} | Teléfono: {safeRender(selectedClient.phone)}
                                     </p>
                                 )}
@@ -275,7 +260,7 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
 
                             {/* Herramienta */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                <label className="block text-sm font-medium text-slate-300 mb-2">
                                     <Wrench className="h-4 w-4 inline mr-1" />
                                     Herramienta
                                 </label>
@@ -284,7 +269,7 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
                                     value={formData.toolId}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                                 >
                                     <option value="">Seleccionar herramienta...</option>
                                     {tools.map(tool => (
@@ -294,7 +279,7 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
                                     ))}
                                 </select>
                                 {selectedTool && (
-                                    <p className="text-sm text-gray-400 mt-1">
+                                    <p className="text-sm text-slate-400 mt-1">
                                         Categoría: {safeRender(selectedTool.category?.name)} | Tarifa: ${safeRender(selectedTool.rentalRate)}/día | Estado: {safeRender(selectedTool.status)}
                                     </p>
                                 )}
@@ -303,7 +288,7 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
 
                             {/* Fecha de devolución acordada */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                <label className="block text-sm font-medium text-slate-300 mb-2">
                                     <Calendar className="h-4 w-4 inline mr-1" />
                                     Fecha de Devolución Acordada
                                 </label>
@@ -315,16 +300,16 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
                                     min={minDate}
                                     max={maxDateStr}
                                     required
-                                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                                 />
-                                <p className="text-xs text-gray-400 mt-1">
+                                <p className="text-xs text-slate-400 mt-1">
                                     Debe ser entre mañana y {maxDate.toLocaleDateString('es-ES')}
                                 </p>
                             </div>
 
                             {/* Notas */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                <label className="block text-sm font-medium text-slate-300 mb-2">
                                     <FileText className="h-4 w-4 inline mr-1" />
                                     Notas (Opcional)
                                 </label>
@@ -333,7 +318,7 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
                                     value={formData.notes}
                                     onChange={handleInputChange}
                                     rows={3}
-                                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                                     placeholder="Información adicional sobre el préstamo..."
                                 />
                             </div>
@@ -363,7 +348,7 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
 
                     {/* Validación comprensiva simplificada */}
                     {(clientValidation || toolAvailability) && (
-                        <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
+                        <div className="bg-slate-700 rounded-lg p-4 border border-slate-600">
                             <h3 className="text-sm font-medium text-white mb-3">Resumen de Validación</h3>
                             <div className="space-y-2">
                                 <div className="flex items-center">
@@ -374,7 +359,7 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
                                         Cliente elegible
                                     </span>
                                     {clientValidation && !clientValidation.eligible && (
-                                        <span className="ml-2 text-xs text-gray-400">
+                                        <span className="ml-2 text-xs text-slate-400">
                                             - Revisar restricciones
                                         </span>
                                     )}
@@ -388,7 +373,7 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
                                         Herramienta disponible
                                     </span>
                                     {toolAvailability?.issue && (
-                                        <span className="ml-2 text-xs text-gray-400">
+                                        <span className="ml-2 text-xs text-slate-400">
                                             - {toolAvailability.issue}
                                         </span>
                                     )}
@@ -441,11 +426,11 @@ const LoanForm = ({ onSubmit, onClose, onSuccess }) => {
 
 
                     {/* Buttons */}
-                    <div className="flex justify-end space-x-3 pt-4 border-t border-gray-700">
+                    <div className="flex justify-end space-x-3 pt-4 border-t border-slate-700/50">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+                            className="px-4 py-2 text-slate-400 hover:text-white transition-colors"
                         >
                             Cancelar
                         </button>

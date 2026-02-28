@@ -1,4 +1,4 @@
-// loans/components/LoansList.jsx - VERSIÓN CORREGIDA con formateo de fechas
+﻿// loans/components/LoansList.jsx - VERSIÓN CORREGIDA con formateo de fechas
 import React, { useState, useMemo } from 'react';
 import {
     Search,
@@ -11,9 +11,13 @@ import {
     DollarSign,
     FileText,
     Clock,
-    Loader
+    Loader,
+    ChevronLeft,
+    ChevronRight
 } from 'lucide-react';
 import { formatDateLocal, daysBetween } from '../../../../utils/dateUtils';
+
+const ITEMS_OPTIONS = [10, 15, 20];
 
 const LoansList = ({
                        loans,
@@ -28,6 +32,13 @@ const LoansList = ({
     const [statusFilter, setStatusFilter] = useState('all');
     const [sortBy, setSortBy] = useState('loanDate');
     const [sortOrder, setSortOrder] = useState('desc');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+
+    const handleItemsPerPageChange = (newValue) => {
+        setItemsPerPage(newValue);
+        setCurrentPage(1);
+    };
 
     // Filtrar y ordenar préstamos
     const filteredLoans = useMemo(() => {
@@ -90,7 +101,7 @@ const LoansList = ({
             'DAMAGED': { color: 'bg-yellow-100 text-yellow-800', icon: AlertTriangle, label: 'Con Daños' }
         };
 
-        const badge = badges[status] || { color: 'bg-gray-100 text-gray-800', icon: Clock, label: status };
+        const badge = badges[status] || { color: 'bg-slate-200 text-slate-800', icon: Clock, label: status };
         const Icon = badge.icon;
 
         return (
@@ -112,35 +123,26 @@ const LoansList = ({
         return daysBetween(today, loan.agreedReturnDate);
     };
 
-    const handleSort = (field) => {
-        if (sortBy === field) {
-            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-        } else {
-            setSortBy(field);
-            setSortOrder('asc');
-        }
-    };
-
     if (loading) {
         return (
-            <div className="bg-gray-800 rounded-lg border border-gray-700 p-8">
+            <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg border border-slate-700/50 p-8">
                 <div className="flex items-center justify-center">
                     <Loader className="h-8 w-8 animate-spin text-orange-500 mr-3" />
-                    <span className="text-gray-300">Cargando préstamos...</span>
+                    <span className="text-slate-300">Cargando préstamos...</span>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="bg-gray-800 rounded-lg border border-gray-700">
+        <div className="bg-slate-800/60 backdrop-blur-sm rounded-lg border border-slate-700/50 shadow-lg">
             {/* Header */}
-            <div className="p-6 border-b border-gray-700">
+            <div className="p-6 border-b border-slate-700/50">
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-white">{title}</h3>
                     <button
                         onClick={onRefresh}
-                        className="flex items-center px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 transition-colors"
+                        className="flex items-center px-3 py-1 bg-slate-700 text-slate-300 hover:text-white rounded hover:bg-slate-600 transition-colors"
                     >
                         <RefreshCw className="h-4 w-4 mr-1" />
                         Actualizar
@@ -151,13 +153,13 @@ const LoansList = ({
                 <div className="flex flex-col sm:flex-row gap-4">
                     {/* Búsqueda */}
                     <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
                         <input
                             type="text"
                             placeholder="Buscar por cliente, herramienta o ID..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            className="w-full pl-10 pr-4 py-2 bg-slate-700 border border-slate-600 rounded-md text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
                         />
                     </div>
 
@@ -165,7 +167,7 @@ const LoansList = ({
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                     >
                         <option value="all">Todos los estados</option>
                         <option value="ACTIVE">Activos</option>
@@ -182,7 +184,7 @@ const LoansList = ({
                             setSortBy(field);
                             setSortOrder(order);
                         }}
-                        className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                     >
                         <option value="loanDate-desc">Fecha préstamo (Más reciente)</option>
                         <option value="loanDate-asc">Fecha préstamo (Más antigua)</option>
@@ -196,16 +198,23 @@ const LoansList = ({
                 </div>
 
                 {/* Contador de resultados */}
-                <div className="mt-4 text-sm text-gray-400">
+                <div className="mt-4 text-sm text-slate-400">
                     Mostrando {filteredLoans.length} de {loans?.length || 0} préstamos
                 </div>
             </div>
 
             {/* Lista */}
-            <div className="divide-y divide-gray-700">
+            {(() => {
+                const totalPages = Math.ceil(filteredLoans.length / itemsPerPage);
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const paginatedLoans = filteredLoans.slice(startIndex, startIndex + itemsPerPage);
+
+                return (
+                <>
+            <div className="divide-y divide-slate-700/50">
                 {filteredLoans.length === 0 ? (
-                    <div className="p-8 text-center text-gray-400">
-                        <Package2 className="h-12 w-12 mx-auto mb-4 text-gray-500" />
+                    <div className="p-8 text-center text-slate-400">
+                        <Package2 className="h-12 w-12 mx-auto mb-4 text-slate-500" />
                         <p>{emptyMessage}</p>
                         {searchTerm && (
                             <p className="text-sm mt-2">
@@ -214,12 +223,12 @@ const LoansList = ({
                         )}
                     </div>
                 ) : (
-                    filteredLoans.map((loan) => {
+                    paginatedLoans.map((loan) => {
                         const overdue = isOverdue(loan);
                         const daysUntilReturn = getDaysUntilReturn(loan);
 
                         return (
-                            <div key={loan.id} className="p-6 hover:bg-gray-750 transition-colors">
+                            <div key={loan.id} className="p-6 hover:bg-slate-750 transition-colors">
                                 <div className="flex items-start justify-between">
                                     {/* Información principal */}
                                     <div className="flex-1">
@@ -242,16 +251,16 @@ const LoansList = ({
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                                             <div>
-                                                <span className="text-gray-400 flex items-center">
+                                                <span className="text-slate-400 flex items-center">
                                                     <User className="h-4 w-4 mr-1" />
                                                     Cliente:
                                                 </span>
                                                 <p className="text-white font-medium">{loan.client?.name}</p>
-                                                <p className="text-gray-400 text-xs">{loan.client?.email}</p>
+                                                <p className="text-slate-400 text-xs">{loan.client?.email}</p>
                                             </div>
 
                                             <div>
-                                                <span className="text-gray-400 flex items-center">
+                                                <span className="text-slate-400 flex items-center">
                                                     <Package2 className="h-4 w-4 mr-1" />
                                                     Herramienta:
                                                 </span>
@@ -259,7 +268,7 @@ const LoansList = ({
                                             </div>
 
                                             <div>
-                                                <span className="text-gray-400 flex items-center">
+                                                <span className="text-slate-400 flex items-center">
                                                     <Calendar className="h-4 w-4 mr-1" />
                                                     Fechas:
                                                 </span>
@@ -277,13 +286,13 @@ const LoansList = ({
                                             </div>
 
                                             <div>
-                                                <span className="text-gray-400 flex items-center">
+                                                <span className="text-slate-400 flex items-center">
                                                     <DollarSign className="h-4 w-4 mr-1" />
                                                     Tarifa:
                                                 </span>
                                                 <p className="text-white font-medium">${loan.dailyRate}/día</p>
                                                 {loan.status === 'ACTIVE' && (
-                                                    <p className="text-gray-400 text-xs">
+                                                    <p className="text-slate-400 text-xs">
                                                         {Math.max(0, -daysUntilReturn + 1)} día(s) transcurrido(s)
                                                     </p>
                                                 )}
@@ -292,11 +301,11 @@ const LoansList = ({
 
                                         {loan.notes && (
                                             <div className="mt-3">
-                                                <span className="text-gray-400 text-sm flex items-center">
+                                                <span className="text-slate-400 text-sm flex items-center">
                                                     <FileText className="h-4 w-4 mr-1" />
                                                     Notas:
                                                 </span>
-                                                <p className="text-gray-300 text-sm bg-gray-700 rounded p-2 mt-1">
+                                                <p className="text-slate-300 text-sm bg-slate-700 rounded p-2 mt-1">
                                                     {loan.notes}
                                                 </p>
                                             </div>
@@ -321,6 +330,62 @@ const LoansList = ({
                     })
                 )}
             </div>
+
+            {/* Paginación */}
+            {filteredLoans.length > 0 && (
+                <div className="px-6 py-4 border-t border-slate-700/50 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-800/40">
+                    <div className="flex items-center gap-3 text-sm text-slate-400">
+                        <span>
+                            Mostrando {startIndex + 1}–{Math.min(startIndex + itemsPerPage, filteredLoans.length)} de {filteredLoans.length} préstamos
+                        </span>
+                        <span className="text-slate-600">|</span>
+                        <span>Filas por página:</span>
+                        <select
+                            value={itemsPerPage}
+                            onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+                            className="bg-slate-700 border border-slate-600 text-white rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500"
+                        >
+                            {ITEMS_OPTIONS.map(n => (
+                                <option key={n} value={n}>{n}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}
+                            className="px-2 py-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-xs" title="Primera página">«</button>
+                        <button onClick={() => setCurrentPage(p => p - 1)} disabled={currentPage === 1}
+                            className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" title="Página anterior">
+                            <ChevronLeft className="h-4 w-4" />
+                        </button>
+                        {Array.from({ length: totalPages }, (_, i) => i + 1)
+                            .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+                            .reduce((acc, p, idx, arr) => {
+                                if (idx > 0 && p - arr[idx - 1] > 1) acc.push('...');
+                                acc.push(p); return acc;
+                            }, [])
+                            .map((item, idx) =>
+                                item === '...' ? (
+                                    <span key={`e-${idx}`} className="px-2 text-slate-500 text-sm">…</span>
+                                ) : (
+                                    <button key={item} onClick={() => setCurrentPage(item)}
+                                        className={`min-w-[2rem] h-8 rounded text-sm font-medium transition-colors ${currentPage === item ? 'bg-orange-600 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-700'}`}>
+                                        {item}
+                                    </button>
+                                )
+                            )
+                        }
+                        <button onClick={() => setCurrentPage(p => p + 1)} disabled={currentPage === totalPages}
+                            className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors" title="Página siguiente">
+                            <ChevronRight className="h-4 w-4" />
+                        </button>
+                        <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}
+                            className="px-2 py-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-xs" title="Última página">»</button>
+                    </div>
+                </div>
+            )}
+            </>
+                );
+            })()}
         </div>
     );
 };

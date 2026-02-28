@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+import { getFriendlyError } from '../../../../utils/errorUtils';
 import { Calculator, Calendar, Save, X, AlertTriangle, CheckCircle } from 'lucide-react';
 import { RATE_TYPES, formatCurrency, validateAmount, validateDateRange } from '../utils/rateConstants';
 
@@ -104,7 +105,7 @@ const FineRateConfig = ({
 
             setShowForm(false);
         } catch (error) {
-            setErrors({ submit: error.message });
+            setErrors({ submit: getFriendlyError(error) });
         }
     };
 
@@ -125,7 +126,7 @@ const FineRateConfig = ({
             try {
                 await onDeactivate(rateId);
             } catch (error) {
-                setErrors({ general: error.message });
+                setErrors({ general: getFriendlyError(error) });
             }
         }
     };
@@ -145,7 +146,7 @@ const FineRateConfig = ({
                     </div>
                     <div>
                         <h2 className="text-xl font-semibold text-white">Tarifa de Multa por Atraso</h2>
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-slate-400 text-sm">
                             Configurar el costo diario por devolución tardía de herramientas
                         </p>
                     </div>
@@ -154,7 +155,7 @@ const FineRateConfig = ({
                 {isAdmin && (
                     <button
                         onClick={() => setShowForm(!showForm)}
-                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                        className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition-colors"
                     >
                         {showForm ? <X size={18} /> : <Calculator size={18} />}
                         {showForm ? 'Cancelar' : 'Nueva Tarifa'}
@@ -171,16 +172,16 @@ const FineRateConfig = ({
             )}
 
             {/* Tarifa actual */}
-            <div className="mb-6 bg-gray-750 p-4 rounded-lg border border-gray-600">
+            <div className="mb-6 bg-slate-750 p-4 rounded-lg border border-slate-600">
                 <div className="flex items-center justify-between">
                     <div>
                         <h3 className="font-medium text-white mb-1">Tarifa Actual</h3>
                         <p className="text-2xl font-bold text-red-400">
                             {formatCurrency(currentRate)}
-                            <span className="text-sm text-gray-400 font-normal ml-1">por día</span>
+                            <span className="text-sm text-slate-400 font-normal ml-1">por día</span>
                         </p>
                         {currentRateData && (
-                            <p className="text-sm text-gray-400 mt-1">
+                            <p className="text-sm text-slate-400 mt-1">
                                 Vigente desde: {formatDate(currentRateData.effectiveFrom)}
                                 {currentRateData.effectiveTo && (
                                     <span> hasta {formatDate(currentRateData.effectiveTo)}</span>
@@ -197,7 +198,7 @@ const FineRateConfig = ({
 
             {/* Formulario */}
             {showForm && isAdmin && (
-                <div className="mb-6 bg-gray-750 p-6 rounded-lg border border-gray-600">
+                <div className="mb-6 bg-slate-750 p-6 rounded-lg border border-slate-600">
                     <h3 className="text-lg font-medium text-white mb-4">
                         {editingId ? 'Editar Tarifa' : 'Nueva Tarifa de Multa por Atraso'}
                     </h3>
@@ -212,11 +213,11 @@ const FineRateConfig = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Monto diario */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                <label className="block text-sm font-medium text-slate-300 mb-2">
                                     Monto Diario *
                                 </label>
                                 <div className="relative">
-                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400">
                                         $
                                     </span>
                                     <input
@@ -226,9 +227,9 @@ const FineRateConfig = ({
                                         placeholder="2000"
                                         min="0"
                                         step="100"
-                                        className={`w-full bg-gray-700 border ${
-                                            errors.dailyAmount ? 'border-red-500' : 'border-gray-600'
-                                        } rounded-lg px-4 pl-8 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500`}
+                                        className={`w-full bg-slate-700 border ${
+                                            errors.dailyAmount ? 'border-red-500' : 'border-slate-600'
+                                        } rounded-lg px-4 pl-8 py-2.5 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500`}
                                     />
                                 </div>
                                 {errors.dailyAmount && (
@@ -238,15 +239,15 @@ const FineRateConfig = ({
 
                             {/* Fecha efectiva desde */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                <label className="block text-sm font-medium text-slate-300 mb-2">
                                     Vigente Desde *
                                 </label>
                                 <input
                                     type="date"
                                     value={formData.effectiveFrom}
                                     onChange={(e) => handleInputChange('effectiveFrom', e.target.value)}
-                                    className={`w-full bg-gray-700 border ${
-                                        errors.effectiveFrom ? 'border-red-500' : 'border-gray-600'
+                                    className={`w-full bg-slate-700 border ${
+                                        errors.effectiveFrom ? 'border-red-500' : 'border-slate-600'
                                     } rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500`}
                                 />
                                 {errors.effectiveFrom && (
@@ -256,28 +257,28 @@ const FineRateConfig = ({
 
                             {/* Fecha efectiva hasta */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                <label className="block text-sm font-medium text-slate-300 mb-2">
                                     Vigente Hasta (Opcional)
                                 </label>
                                 <input
                                     type="date"
                                     value={formData.effectiveTo}
                                     onChange={(e) => handleInputChange('effectiveTo', e.target.value)}
-                                    className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500"
+                                    className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500"
                                 />
-                                <p className="mt-1 text-xs text-gray-400">
+                                <p className="mt-1 text-xs text-slate-400">
                                     Si se deja vacío, la tarifa será válida indefinidamente
                                 </p>
                             </div>
 
                             {/* Estado activo */}
                             <div className="flex items-center">
-                                <label className="flex items-center gap-2 text-sm text-gray-300">
+                                <label className="flex items-center gap-2 text-sm text-slate-300">
                                     <input
                                         type="checkbox"
                                         checked={formData.active}
                                         onChange={(e) => handleInputChange('active', e.target.checked)}
-                                        className="rounded border-gray-600 text-blue-500 focus:ring-blue-500 focus:ring-offset-gray-800"
+                                        className="rounded border-slate-600 text-blue-500 focus:ring-orange-500 focus:ring-offset-gray-800"
                                     />
                                     Activar inmediatamente
                                 </label>
@@ -288,14 +289,14 @@ const FineRateConfig = ({
                             <button
                                 type="button"
                                 onClick={() => setShowForm(false)}
-                                className="px-4 py-2 text-gray-400 hover:text-white border border-gray-600 hover:border-gray-500 rounded-lg transition-colors"
+                                className="px-4 py-2 text-slate-400 hover:text-white border border-slate-600 hover:border-slate-500 rounded-lg transition-colors"
                             >
                                 Cancelar
                             </button>
                             <button
                                 onClick={handleSubmit}
                                 disabled={loading}
-                                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white px-6 py-2 rounded-lg transition-colors"
+                                className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 disabled:bg-slate-600 text-white px-6 py-2 rounded-lg transition-colors"
                             >
                                 <Save size={18} />
                                 {loading ? 'Guardando...' : (editingId ? 'Actualizar' : 'Crear Tarifa')}
@@ -310,7 +311,7 @@ const FineRateConfig = ({
                 <h3 className="text-lg font-medium text-white mb-4">Tarifas de Multa Configuradas</h3>
 
                 {fineRates.length === 0 ? (
-                    <div className="text-center py-8 text-gray-400">
+                    <div className="text-center py-8 text-slate-400">
                         <Calculator className="mx-auto h-12 w-12 mb-2" />
                         <p>No hay tarifas de multa configuradas</p>
                     </div>
@@ -322,7 +323,7 @@ const FineRateConfig = ({
                                 className={`p-4 rounded-lg border ${
                                     rate.active
                                         ? 'bg-red-500/5 border-red-500/30'
-                                        : 'bg-gray-750 border-gray-600'
+                                        : 'bg-slate-750 border-slate-600'
                                 }`}
                             >
                                 <div className="flex items-center justify-between">
@@ -337,7 +338,7 @@ const FineRateConfig = ({
                                                 </span>
                                             )}
                                         </div>
-                                        <p className="text-sm text-gray-400 mt-1">
+                                        <p className="text-sm text-slate-400 mt-1">
                                             <Calendar size={14} className="inline mr-1" />
                                             Desde: {formatDate(rate.effectiveFrom)}
                                             {rate.effectiveTo && (
@@ -345,7 +346,7 @@ const FineRateConfig = ({
                                             )}
                                         </p>
                                         {rate.createdAt && (
-                                            <p className="text-xs text-gray-500 mt-1">
+                                            <p className="text-xs text-slate-500 mt-1">
                                                 Creada: {formatDate(rate.createdAt)}
                                             </p>
                                         )}

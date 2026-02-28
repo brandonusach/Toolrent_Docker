@@ -1,15 +1,21 @@
-import React from 'react';
-import { Eye, ArrowUp, ArrowDown, RotateCcw, Minus, Plus, Wrench, AlertTriangle } from 'lucide-react';
+﻿﻿import React, { useState } from 'react';
+import { Eye, ArrowUp, ArrowDown, RotateCcw, Minus, Plus, Wrench, AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatDateTime } from '../../../../utils/dateUtils';
 
+const ITEMS_OPTIONS = [10, 15, 20];
+
 const MovementsList = ({ movements, onViewDetail }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+
+    const handleItemsPerPageChange = (val) => { setItemsPerPage(val); setCurrentPage(1); };
 
     const getToolStatusBadge = (status) => {
         const badges = {
             AVAILABLE: 'bg-green-500/10 text-green-400 border-green-500/30',
             LOANED: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
             IN_REPAIR: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30',
-            DECOMMISSIONED: 'bg-gray-500/10 text-gray-400 border-gray-500/30',
+            DECOMMISSIONED: 'bg-slate-500/10 text-slate-400 border-slate-500/30',
             PARTIALLY_AVAILABLE: 'bg-orange-500/10 text-orange-400 border-orange-500/30'
         };
         return badges[status] || 'bg-slate-500/10 text-slate-400 border-slate-500/30';
@@ -44,7 +50,7 @@ const MovementsList = ({ movements, onViewDetail }) => {
             LOAN: 'bg-red-500/20 text-red-400',
             RETURN: 'bg-green-500/20 text-green-400',
             REPAIR: 'bg-yellow-500/20 text-yellow-400',
-            DECOMMISSION: 'bg-gray-500/20 text-gray-400',
+            DECOMMISSION: 'bg-slate-500/20 text-slate-400',
             RESTOCK: 'bg-purple-500/20 text-purple-400'
         };
         return colors[type] || 'bg-slate-500/20 text-slate-400';
@@ -104,6 +110,11 @@ const MovementsList = ({ movements, onViewDetail }) => {
         );
     }
 
+    // Paginación calculada antes del return
+    const totalPages = Math.ceil(movements.length / itemsPerPage);
+    const pageStart = (currentPage - 1) * itemsPerPage;
+    const paginatedMovements = movements.slice(pageStart, pageStart + itemsPerPage);
+
     return (
         <div className="bg-slate-800/50 backdrop-blur rounded-lg border border-slate-700/50">
             <div className="p-4 border-b border-slate-700/50">
@@ -113,7 +124,7 @@ const MovementsList = ({ movements, onViewDetail }) => {
             </div>
 
             <div className="divide-y divide-slate-700/50">
-                {movements.map((movement) => (
+                {paginatedMovements.map((movement) => (
                     <div
                         key={movement.id}
                         className="p-4 hover:bg-slate-700/30 transition-colors group"
@@ -246,6 +257,43 @@ const MovementsList = ({ movements, onViewDetail }) => {
                     </div>
                 ))}
             </div>
+
+            {/* Paginación */}
+            {movements.length > 0 && (
+                <div className="px-4 py-3 border-t border-slate-700/50 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-800/40">
+                    <div className="flex items-center gap-3 text-sm text-slate-400">
+                        <span>Mostrando {pageStart + 1}–{Math.min(pageStart + itemsPerPage, movements.length)} de {movements.length}</span>
+                        <span className="text-slate-600">|</span>
+                        <span>Filas:</span>
+                        <select value={itemsPerPage} onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+                            className="bg-slate-700 border border-slate-600 text-white rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-orange-500">
+                            {ITEMS_OPTIONS.map(n => <option key={n} value={n}>{n}</option>)}
+                        </select>
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}
+                            className="px-2 py-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-xs">«</button>
+                        <button onClick={() => setCurrentPage(p => p - 1)} disabled={currentPage === 1}
+                            className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                            <ChevronLeft className="h-4 w-4" />
+                        </button>
+                        {Array.from({ length: totalPages }, (_, i) => i + 1)
+                            .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+                            .reduce((acc, p, idx, arr) => { if (idx > 0 && p - arr[idx-1] > 1) acc.push('...'); acc.push(p); return acc; }, [])
+                            .map((item, idx) => item === '...'
+                                ? <span key={`e${idx}`} className="px-2 text-slate-500 text-sm">…</span>
+                                : <button key={item} onClick={() => setCurrentPage(item)}
+                                    className={`min-w-[2rem] h-8 rounded text-sm font-medium transition-colors ${currentPage === item ? 'bg-orange-600 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-700'}`}>{item}</button>
+                            )}
+                        <button onClick={() => setCurrentPage(p => p + 1)} disabled={currentPage === totalPages}
+                            className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                            <ChevronRight className="h-4 w-4" />
+                        </button>
+                        <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}
+                            className="px-2 py-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-xs">»</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

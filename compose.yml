@@ -39,6 +39,34 @@ services:
     networks:
       - app-network
 
+  # --- SERVICIO FRONTEND DEV (hot reload) ---
+  # Usar: docker compose up frontend-dev
+  # Acceder en: http://localhost:5173
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.js:/app/vite.config.js
+      - ./frontend/tailwind.config.js:/app/tailwind.config.js
+      - ./frontend/postcss.config.js:/app/postcss.config.js
+    environment:
+      - VITE_TOOLRENT_BACKEND_SERVER=${HOST_IP}
+      - VITE_TOOLRENT_BACKEND_PORT=8081
+      - VITE_KEYCLOAK_URL=http://${HOST_IP}:8080
+      - VITE_KEYCLOAK_REALM=toolrent-realm
+      - VITE_KEYCLOAK_CLIENT_ID=toolrent-frontend
+      - CHOKIDAR_USEPOLLING=true
+    profiles:
+      - dev
+    networks:
+      - app-network
+
   # --- SERVICIOS BACKEND ---
   backend1:
     build:

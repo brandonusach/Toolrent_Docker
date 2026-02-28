@@ -38,7 +38,7 @@ const ClientManagement = () => {
 
     const handleCreateClient = async (clientData) => { await createClient(clientData); closeAllModals(); };
     const handleUpdateClient = async (clientId, clientData) => { await updateClient(clientId, clientData); closeAllModals(); };
-    const handleDeleteClient = async (client) => { if (hasPermission(isAdmin ? 'admin' : 'user', PERMISSIONS.CLIENT.DELETE) && window.confirm('¿Seguro?')) { await deleteClient(client.id); closeAllModals(); } };
+    const handleDeleteClient = async (client) => { if (hasPermission(isAdmin ? 'admin' : 'user', PERMISSIONS.CLIENT.DELETE) && window.confirm(`¿Estás seguro de que deseas eliminar al cliente "${client.name}"? Esta acción no se puede deshacer.`)) { await deleteClient(client.id); closeAllModals(); } };
     const handleSearch = (criteria) => { setSearchCriteria(criteria); };
     const handleClearSearch = () => { setSearchCriteria({ general: '', status: 'ALL' }); };
 

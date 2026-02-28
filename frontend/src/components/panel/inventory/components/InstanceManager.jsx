@@ -1,4 +1,4 @@
-// inventory/components/InstanceManager.jsx - PURE VERSION with Repair Functionality
+﻿// inventory/components/InstanceManager.jsx - PURE VERSION with Repair Functionality
 import React, { useState, useEffect } from 'react';
 import { X, Package, AlertTriangle, RefreshCw, Wrench, CheckCircle } from 'lucide-react';
 
@@ -41,14 +41,12 @@ const InstanceManager = ({ tool, onClose }) => {
                 const data = await response.json();
                 setInstances(Array.isArray(data) ? data : []);
             } else {
-                console.error('Error loading instances:', response.status);
                 setInstances([]);
                 if (response.status !== 404) {
                     alert('Error al cargar instancias de herramientas');
                 }
             }
         } catch (error) {
-            console.error('Error loading instances:', error);
             setInstances([]);
             alert('Error de conexión al cargar instancias');
         } finally {
@@ -77,7 +75,6 @@ const InstanceManager = ({ tool, onClose }) => {
                 alert(`❌ Error al reparar instancia: ${errorData}`);
             }
         } catch (error) {
-            console.error('Error repairing instance:', error);
             alert('❌ Error de conexión al reparar instancia');
         }
     };
@@ -90,7 +87,7 @@ const InstanceManager = ({ tool, onClose }) => {
             'UNDER_REPAIR': 'bg-yellow-900 text-yellow-300',
             'DECOMMISSIONED': 'bg-red-900 text-red-300'
         };
-        return colors[status] || 'bg-gray-900 text-gray-300';
+        return colors[status] || 'bg-slate-900 text-slate-300';
     };
 
     const getStatusText = (status) => {
@@ -126,14 +123,14 @@ const InstanceManager = ({ tool, onClose }) => {
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
             onClick={handleOverlayClick}
         >
-            <div className="bg-gray-800 rounded-lg p-6 w-full max-w-5xl max-h-[90vh] overflow-hidden relative">
+            <div className="bg-slate-800 rounded-lg p-6 w-full max-w-5xl max-h-[90vh] overflow-hidden relative">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-6">
                     <div>
                         <h3 className="text-2xl font-bold text-white">
                             Herramientas de: {tool?.name}
                         </h3>
-                        <p className="text-gray-400 mt-1">
+                        <p className="text-slate-400 mt-1">
                             Total: {instances.length} herramientas - Stock Actual: {tool?.currentStock || 0}
                         </p>
                     </div>
@@ -141,14 +138,14 @@ const InstanceManager = ({ tool, onClose }) => {
                         <button
                             onClick={loadInstances}
                             disabled={loading}
-                            className="p-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50"
+                            className="p-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors disabled:opacity-50"
                             title="Actualizar"
                         >
                             <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                         </button>
                         <button
                             onClick={onClose}
-                            className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-700 rounded-lg z-10"
+                            className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-700 rounded-lg z-10"
                             title="Cerrar"
                         >
                             <X className="h-6 w-6" />
@@ -180,14 +177,14 @@ const InstanceManager = ({ tool, onClose }) => {
                 <div className="overflow-y-auto" style={{ maxHeight: 'calc(90vh - 300px)' }}>
                     {loading ? (
                         <div className="text-center py-8">
-                            <RefreshCw className="h-8 w-8 text-gray-400 mx-auto mb-4 animate-spin" />
-                            <p className="text-gray-400">Cargando herramientas...</p>
+                            <RefreshCw className="h-8 w-8 text-slate-400 mx-auto mb-4 animate-spin" />
+                            <p className="text-slate-400">Cargando herramientas...</p>
                         </div>
                     ) : instances.length === 0 ? (
                         <div className="text-center py-12">
-                            <Package className="h-12 w-12 text-gray-500 mx-auto mb-4" />
-                            <p className="text-gray-400">No hay herramientas registradas</p>
-                            <p className="text-gray-500 text-sm mt-2">
+                            <Package className="h-12 w-12 text-slate-500 mx-auto mb-4" />
+                            <p className="text-slate-400">No hay herramientas registradas</p>
+                            <p className="text-slate-500 text-sm mt-2">
                                 Las herramientas se crean automáticamente al agregar stock
                             </p>
                         </div>
@@ -196,7 +193,7 @@ const InstanceManager = ({ tool, onClose }) => {
                             {instances.map((instance) => (
                                 <div
                                     key={instance.id}
-                                    className="bg-gray-700 rounded-lg p-4 hover:bg-gray-650 transition-colors"
+                                    className="bg-slate-700 rounded-lg p-4 hover:bg-gray-650 transition-colors"
                                 >
                                     <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center space-y-3 lg:space-y-0">
                                         {/* Instance Information */}
@@ -205,7 +202,7 @@ const InstanceManager = ({ tool, onClose }) => {
                                                 <p className="text-white font-medium">
                                                     ID: #{instance.id}
                                                 </p>
-                                                <p className="text-gray-400 text-sm">
+                                                <p className="text-slate-400 text-sm">
                                                     Instancia individual de herramienta
                                                 </p>
                                             </div>
@@ -256,8 +253,8 @@ const InstanceManager = ({ tool, onClose }) => {
                 </div>
 
                 {/* Footer */}
-                <div className="mt-6 pt-4 border-t border-gray-700">
-                    <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center text-sm text-gray-400 space-y-1 sm:space-y-0">
+                <div className="mt-6 pt-4 border-t border-slate-700/50">
+                    <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center text-sm text-slate-400 space-y-1 sm:space-y-0">
                         <span>
                             {instances.length > 0 && `Mostrando ${instances.length} herramienta${instances.length !== 1 ? 's' : ''}`}
                         </span>

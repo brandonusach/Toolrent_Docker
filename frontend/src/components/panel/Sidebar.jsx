@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Wrench, RefreshCw, Users, DollarSign, FileText,
-    BarChart3, Settings, Home, AlertTriangle, LogOut
+    BarChart3, Home, AlertTriangle, LogOut
 } from 'lucide-react';
 
 export const menuItems = [
@@ -52,6 +52,8 @@ const Sidebar = ({ user, isAdmin, activeSection, setActiveSection, handleLogout 
                         <button
                             key={item.id}
                             onClick={() => setActiveSection(item.id)}
+                            aria-label={`Ir a ${item.label}`}
+                            aria-current={isActive ? 'page' : undefined}
                             className={`w-full flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ease-in-out relative group ${
                                 isActive
                                     ? 'bg-orange-500/10 text-orange-400'
@@ -91,6 +93,7 @@ const Sidebar = ({ user, isAdmin, activeSection, setActiveSection, handleLogout 
                         onClick={handleLogout}
                         className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors"
                         title="Cerrar Sesión"
+                        aria-label="Cerrar sesión"
                     >
                         <LogOut className="h-5 w-5" />
                     </button>

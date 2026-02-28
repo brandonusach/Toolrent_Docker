@@ -1,4 +1,4 @@
-// loans/components/ReturnForm.jsx - VERSIÓN CORREGIDA con formateo de fechas
+﻿// loans/components/ReturnForm.jsx - VERSIÓN CORREGIDA con formateo de fechas
 import React, { useState, useEffect } from 'react';
 import { X, Package, AlertTriangle, FileText, CheckCircle, Loader } from 'lucide-react';
 import { formatDateLocal, daysBetween } from '../../../../utils/dateUtils';
@@ -66,7 +66,6 @@ const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
             await onSubmit(loan.id, returnData);
             onSuccess();
         } catch (err) {
-            console.error('Error processing return:', err);
             setError(err.message || 'Error al procesar la devolución');
         } finally {
             setLoading(false);
@@ -79,14 +78,14 @@ const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center p-4 pt-8 z-50 overflow-y-auto">
-            <div className="bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full mb-8 max-h-[calc(100vh-4rem)]">
+            <div className="bg-slate-800 rounded-lg shadow-xl max-w-2xl w-full mb-8 max-h-[calc(100vh-4rem)]">
                 <div className="max-h-[calc(100vh-4rem)] overflow-y-auto">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-700 sticky top-0 bg-gray-800 z-10">
+                <div className="flex items-center justify-between p-6 border-b border-slate-700/50 sticky top-0 bg-slate-800 z-10">
                     <h2 className="text-xl font-bold text-white">Procesar Devolución</h2>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-white transition-colors"
+                        className="text-slate-400 hover:text-white transition-colors"
                     >
                         <X className="h-6 w-6" />
                     </button>
@@ -94,44 +93,44 @@ const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
                     {/* Información del préstamo */}
-                    <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
+                    <div className="bg-slate-700 rounded-lg p-4 border border-slate-600">
                         <h3 className="text-lg font-medium text-white mb-3">Información del Préstamo</h3>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             <div>
-                                <span className="text-gray-400">Cliente:</span>
+                                <span className="text-slate-400">Cliente:</span>
                                 <p className="text-white font-medium">{loan.client?.name}</p>
                             </div>
 
                             <div>
-                                <span className="text-gray-400">Herramienta:</span>
+                                <span className="text-slate-400">Herramienta:</span>
                                 <p className="text-white font-medium">{loan.tool?.name}</p>
                             </div>
 
                             <div>
-                                <span className="text-gray-400">Fecha de préstamo:</span>
+                                <span className="text-slate-400">Fecha de préstamo:</span>
                                 <p className="text-white font-medium">
                                     {formatDateLocal(loan.loanDate, { day: 'numeric', month: 'long', year: 'numeric' })}
                                 </p>
                             </div>
 
                             <div>
-                                <span className="text-gray-400">Fecha acordada:</span>
+                                <span className="text-slate-400">Fecha acordada:</span>
                                 <p className="text-white font-medium">
                                     {formatDateLocal(loan.agreedReturnDate, { day: 'numeric', month: 'long', year: 'numeric' })}
                                 </p>
                             </div>
 
                             <div>
-                                <span className="text-gray-400">Tarifa de arriendo:</span>
+                                <span className="text-slate-400">Tarifa de arriendo:</span>
                                 <p className="text-white font-medium">${loan.dailyRate}/día</p>
                             </div>
                         </div>
 
                         {loan.notes && (
                             <div className="mt-3">
-                                <span className="text-gray-400">Notas del préstamo:</span>
-                                <p className="text-white text-sm bg-gray-600 rounded p-2 mt-1">{loan.notes}</p>
+                                <span className="text-slate-400">Notas del préstamo:</span>
+                                <p className="text-white text-sm bg-slate-600 rounded p-2 mt-1">{loan.notes}</p>
                             </div>
                         )}
                     </div>
@@ -180,10 +179,10 @@ const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
                                 name="damaged"
                                 checked={returnData.damaged}
                                 onChange={handleInputChange}
-                                className="h-4 w-4 text-orange-600 bg-gray-700 border-gray-600 rounded focus:ring-orange-500"
+                                className="h-4 w-4 text-orange-600 bg-slate-700 border-slate-600 rounded focus:ring-orange-500"
                             />
                             <div className="flex items-center">
-                                <Package className="h-4 w-4 text-gray-400 mr-2" />
+                                <Package className="h-4 w-4 text-slate-400 mr-2" />
                                 <span className="text-white font-medium">La herramienta presenta daños</span>
                             </div>
                         </label>
@@ -191,8 +190,8 @@ const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
                         {returnData.damaged && (
                             <div className="mt-3 ml-7 space-y-3">
                                 {/* Tipo de daño */}
-                                <div className="bg-gray-700 border border-gray-600 rounded-lg p-3">
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                <div className="bg-slate-700 border border-slate-600 rounded-lg p-3">
+                                    <label className="block text-sm font-medium text-slate-300 mb-2">
                                         Tipo de daño
                                     </label>
                                     <div className="space-y-2">
@@ -203,11 +202,11 @@ const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
                                                 value="MINOR"
                                                 checked={returnData.damageType === 'MINOR'}
                                                 onChange={handleInputChange}
-                                                className="h-4 w-4 text-orange-600 bg-gray-700 border-gray-600 focus:ring-orange-500"
+                                                className="h-4 w-4 text-orange-600 bg-slate-700 border-slate-600 focus:ring-orange-500"
                                             />
                                             <div>
                                                 <span className="text-white font-medium">Daño Leve (Reparable)</span>
-                                                <p className="text-xs text-gray-400">Se aplicará multa por costo de reparación. El administrador debe marcar la herramienta como reparada manualmente cuando esté lista.</p>
+                                                <p className="text-xs text-slate-400">Se aplicará multa por costo de reparación. El administrador debe marcar la herramienta como reparada manualmente cuando esté lista.</p>
                                             </div>
                                         </label>
                                         <label className="flex items-center space-x-2 cursor-pointer">
@@ -217,11 +216,11 @@ const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
                                                 value="IRREPARABLE"
                                                 checked={returnData.damageType === 'IRREPARABLE'}
                                                 onChange={handleInputChange}
-                                                className="h-4 w-4 text-red-600 bg-gray-700 border-gray-600 focus:ring-red-500"
+                                                className="h-4 w-4 text-red-600 bg-slate-700 border-slate-600 focus:ring-red-500"
                                             />
                                             <div>
                                                 <span className="text-white font-medium">Daño Irreparable</span>
-                                                <p className="text-xs text-gray-400">Se cobrará el valor completo de reposición. La herramienta será dada de baja después del pago.</p>
+                                                <p className="text-xs text-slate-400">Se cobrará el valor completo de reposición. La herramienta será dada de baja después del pago.</p>
                                             </div>
                                         </label>
                                     </div>
@@ -263,7 +262,7 @@ const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
 
                     {/* Notas de devolución */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-slate-300 mb-2">
                             <FileText className="h-4 w-4 inline mr-1" />
                             Notas de Devolución
                             {returnData.damaged && <span className="text-red-400 ml-1">*</span>}
@@ -274,7 +273,7 @@ const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
                             onChange={handleInputChange}
                             rows={4}
                             required={returnData.damaged}
-                            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                             placeholder={
                                 returnData.damaged
                                     ? "Describa detalladamente los daños encontrados en la herramienta..."
@@ -299,11 +298,11 @@ const ReturnForm = ({ loan, onSubmit, onClose, onSuccess }) => {
                     )}
 
                     {/* Buttons */}
-                    <div className="flex justify-end space-x-3 pt-4 border-t border-gray-700">
+                    <div className="flex justify-end space-x-3 pt-4 border-t border-slate-700/50">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+                            className="px-4 py-2 text-slate-400 hover:text-white transition-colors"
                         >
                             Cancelar
                         </button>

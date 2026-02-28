@@ -1,15 +1,8 @@
-import React from 'react';
+﻿﻿import React from 'react';
 import { ArrowLeft, Package, User, Calendar, FileText, TrendingUp, TrendingDown, RotateCcw, AlertCircle } from 'lucide-react';
 import { formatDateTime } from '../../../../utils/dateUtils';
 
 const MovementDetail = ({ movement, onBack }) => {
-    // Debug: Verificar que toolId corresponde al ID de la herramienta
-    console.log('🔍 MovementDetail - Datos del movimiento:', {
-        movementId: movement?.id,
-        toolId: movement?.toolId,
-        toolName: movement?.toolName,
-        toolObject: movement?.tool
-    });
 
     if (!movement) {
         return (
@@ -34,7 +27,7 @@ const MovementDetail = ({ movement, onBack }) => {
             LOAN: 'bg-red-500/20 text-red-400 border-red-500/50',
             RETURN: 'bg-green-500/20 text-green-400 border-green-500/50',
             REPAIR: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50',
-            DECOMMISSION: 'bg-gray-500/20 text-gray-400 border-gray-500/50',
+            DECOMMISSION: 'bg-slate-500/20 text-slate-400 border-slate-500/50',
             RESTOCK: 'bg-purple-500/20 text-purple-400 border-purple-500/50'
         };
         return colors[type] || 'bg-slate-500/20 text-slate-400 border-slate-500/50';
@@ -45,7 +38,7 @@ const MovementDetail = ({ movement, onBack }) => {
             AVAILABLE: 'bg-green-500/10 text-green-400 border-green-500/30',
             LOANED: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
             IN_REPAIR: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30',
-            DECOMMISSIONED: 'bg-gray-500/10 text-gray-400 border-gray-500/30',
+            DECOMMISSIONED: 'bg-slate-500/10 text-slate-400 border-slate-500/30',
             PARTIALLY_AVAILABLE: 'bg-orange-500/10 text-orange-400 border-orange-500/30'
         };
         return badges[status] || 'bg-slate-500/10 text-slate-400 border-slate-500/30';

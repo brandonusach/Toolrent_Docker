@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { X, Save, User, Hash, Phone, Mail, AlertCircle } from 'lucide-react';
+import { getFriendlyError, getFieldErrors } from '../../../../utils/errorUtils';
 
 const ClientForm = ({
                         mode = 'create', // 'create' or 'edit'
@@ -16,6 +17,7 @@ const ClientForm = ({
 
     // Solo errores del servidor, no validaciones frontend
     const [serverErrors, setServerErrors] = useState({});
+    const [generalError, setGeneralError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Llenar el formulario si estamos en modo edición
@@ -86,6 +88,9 @@ const ClientForm = ({
             formattedValue = formatRUTInput(value);
         } else if (name === 'phone') {
             formattedValue = formatPhoneInput(value);
+        } else if (name === 'name') {
+            // Solo letras, espacios, tildes, ñ/Ñ y guión (sin números ni caracteres especiales)
+            formattedValue = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ '\-]/g, '');
         }
 
         setFormData(prev => ({
@@ -105,46 +110,22 @@ const ClientForm = ({
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        setServerErrors({}); // Limpiar errores previos
+        setServerErrors({});
+        setGeneralError('');
 
         try {
-            // Enviar datos directamente al backend sin validaciones frontend
-            // El backend se encarga de toda la validación y normalización
-            // En modo edición, no se envía el RUT
             const dataToSubmit = mode === 'edit'
                 ? { name: formData.name, phone: formData.phone, email: formData.email }
                 : formData;
 
             await onSubmit(dataToSubmit);
-            onClose(); // Cerrar el modal solo si tiene éxito
+            onClose();
         } catch (error) {
-            // Manejar errores del servidor igual que ToolForm
-            console.error('Error submitting form:', error);
-            console.log('Error completo:', JSON.stringify(error, null, 2));
-            console.log('Error.response:', error.response);
-            console.log('Error.response.data:', error.response?.data);
-
-            if (error.response && error.response.data) {
-                const errorData = error.response.data;
-                console.log('Tipo de errorData:', typeof errorData);
-                console.log('errorData:', errorData);
-                console.log('errorData.fieldErrors:', errorData.fieldErrors);
-
-                // Si el backend envía fieldErrors (mismo formato que ToolForm)
-                if (typeof errorData === 'object' && errorData.fieldErrors) {
-                    console.log('✅ Usando fieldErrors:', errorData.fieldErrors);
-                    setServerErrors(errorData.fieldErrors);
-                } else if (typeof errorData === 'string') {
-                    // Mostrar error en alert igual que ToolForm
-                    console.log('⚠️ errorData es string:', errorData);
-                    alert(`Error: ${errorData}`);
-                } else {
-                    console.log('❌ errorData no reconocido');
-                    alert('Error: Error desconocido del servidor');
-                }
+            const fieldErrors = getFieldErrors(error);
+            if (fieldErrors) {
+                setServerErrors(fieldErrors);
             } else {
-                console.log('❌ No hay error.response.data, usando error.message');
-                alert(`Error: ${error.message || 'Error desconocido'}`);
+                setGeneralError(getFriendlyError(error));
             }
         } finally {
             setIsSubmitting(false);
@@ -153,15 +134,15 @@ const ClientForm = ({
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 py-8 px-4">
-            <div className="bg-gray-800 rounded-xl max-w-lg w-full border border-gray-700 max-h-[85vh] overflow-y-auto my-auto">
+            <div className="bg-slate-800 rounded-xl max-w-lg w-full border border-slate-700/50 max-h-[85vh] overflow-y-auto my-auto">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-700">
+                <div className="flex items-center justify-between p-6 border-b border-slate-700/50">
                     <h2 className="text-xl font-bold text-white">
                         {mode === 'create' ? 'Nuevo Cliente' : 'Editar Cliente'}
                     </h2>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-white p-1 rounded"
+                        className="text-slate-400 hover:text-white p-1 rounded transition-colors"
                     >
                         <X size={20} />
                     </button>
@@ -170,18 +151,18 @@ const ClientForm = ({
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
                     {/* Error general del servidor */}
-                    {serverErrors.general && (
+                    {(serverErrors.general || generalError) && (
                         <div className="p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
                             <p className="text-red-400 text-sm flex items-center">
                                 <AlertCircle size={14} className="mr-2" />
-                                {serverErrors.general}
+                                {serverErrors.general || generalError}
                             </p>
                         </div>
                     )}
 
                     {/* Nombre */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-slate-300 mb-2">
                             <User size={16} className="inline mr-2" />
                             Nombre Completo *
                         </label>
@@ -193,10 +174,10 @@ const ClientForm = ({
                             maxLength={100}
                             value={formData.name}
                             onChange={handleInputChange}
-                            className={`w-full px-3 py-2 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 ${
+                            className={`w-full px-3 py-2 bg-slate-700 border rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 ${
                                 serverErrors.name 
                                     ? 'border-red-500 focus:ring-red-500' 
-                                    : 'border-gray-600 focus:ring-blue-500'
+                                    : 'border-slate-600 focus:ring-orange-500'
                             } transition-colors`}
                             placeholder="Ingrese el nombre completo"
                             disabled={isSubmitting}
@@ -208,13 +189,13 @@ const ClientForm = ({
                             </p>
                         )}
                         {!serverErrors.name && (
-                            <p className="text-gray-400 text-xs mt-1">Mínimo 2 caracteres</p>
+                            <p className="text-slate-400 text-xs mt-1">Solo letras y espacios. Ej: Juan Pérez García</p>
                         )}
                     </div>
 
-                    {/* RUT - Sin formateo frontend, el backend lo maneja */}
+                    {/* RUT */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-slate-300 mb-2">
                             <Hash size={16} className="inline mr-2" />
                             RUT *
                         </label>
@@ -226,10 +207,10 @@ const ClientForm = ({
                             maxLength={12}
                             value={formData.rut}
                             onChange={handleInputChange}
-                            className={`w-full px-3 py-2 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 ${
+                            className={`w-full px-3 py-2 bg-slate-700 border rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 ${
                                 serverErrors.rut 
                                     ? 'border-red-500 focus:ring-red-500' 
-                                    : 'border-gray-600 focus:ring-blue-500'
+                                    : 'border-slate-600 focus:ring-orange-500'
                             } ${mode === 'edit' ? 'opacity-60 cursor-not-allowed' : ''} transition-colors`}
                             placeholder="Ej: 12345678-9 o 12.345.678-9"
                             disabled={isSubmitting || mode === 'edit'}
@@ -241,16 +222,16 @@ const ClientForm = ({
                             </p>
                         )}
                         {!serverErrors.rut && mode === 'create' && (
-                            <p className="text-gray-400 text-xs mt-1">Formato: 12.345.678-9</p>
+                            <p className="text-slate-400 text-xs mt-1">Formato: 12.345.678-9</p>
                         )}
                         {!serverErrors.rut && mode === 'edit' && (
-                            <p className="text-gray-400 text-xs mt-1">El RUT no se puede modificar</p>
+                            <p className="text-slate-400 text-xs mt-1">El RUT no se puede modificar</p>
                         )}
                     </div>
 
-                    {/* Teléfono - Sin formateo frontend, el backend lo maneja */}
+                    {/* Teléfono */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-slate-300 mb-2">
                             <Phone size={16} className="inline mr-2" />
                             Teléfono *
                         </label>
@@ -262,10 +243,10 @@ const ClientForm = ({
                             maxLength={15}
                             value={formData.phone}
                             onChange={handleInputChange}
-                            className={`w-full px-3 py-2 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 ${
+                            className={`w-full px-3 py-2 bg-slate-700 border rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 ${
                                 serverErrors.phone 
                                     ? 'border-red-500 focus:ring-red-500' 
-                                    : 'border-gray-600 focus:ring-blue-500'
+                                    : 'border-slate-600 focus:ring-orange-500'
                             } transition-colors`}
                             placeholder="Ej: 912345678, +56912345678, 221234567"
                             disabled={isSubmitting}
@@ -277,13 +258,13 @@ const ClientForm = ({
                             </p>
                         )}
                         {!serverErrors.phone && (
-                            <p className="text-gray-400 text-xs mt-1">Celular o fijo chileno</p>
+                            <p className="text-slate-400 text-xs mt-1">Celular o fijo chileno</p>
                         )}
                     </div>
 
-                    {/* Email - Validación HTML5 básica */}
+                    {/* Email */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <label className="block text-sm font-medium text-slate-300 mb-2">
                             <Mail size={16} className="inline mr-2" />
                             Email *
                         </label>
@@ -293,10 +274,10 @@ const ClientForm = ({
                             required
                             value={formData.email}
                             onChange={handleInputChange}
-                            className={`w-full px-3 py-2 bg-gray-700 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 ${
+                            className={`w-full px-3 py-2 bg-slate-700 border rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 ${
                                 serverErrors.email 
                                     ? 'border-red-500 focus:ring-red-500' 
-                                    : 'border-gray-600 focus:ring-blue-500'
+                                    : 'border-slate-600 focus:ring-orange-500'
                             } transition-colors`}
                             placeholder="cliente@email.com"
                             disabled={isSubmitting}
@@ -308,7 +289,7 @@ const ClientForm = ({
                             </p>
                         )}
                         {!serverErrors.email && (
-                            <p className="text-gray-400 text-xs mt-1">Formato válido de correo electrónico</p>
+                            <p className="text-slate-400 text-xs mt-1">Formato válido de correo electrónico</p>
                         )}
                     </div>
 
@@ -318,7 +299,7 @@ const ClientForm = ({
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors"
+                            className="flex-1 px-4 py-2 bg-slate-700 text-slate-300 hover:text-white rounded-lg hover:bg-slate-600 transition-colors border border-slate-600"
                             disabled={isSubmitting}
                         >
                             Cancelar
@@ -326,7 +307,7 @@ const ClientForm = ({
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                            className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-semibold"
                         >
                             {isSubmitting ? (
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>

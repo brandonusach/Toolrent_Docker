@@ -1,4 +1,4 @@
-// loans/components/ClientValidation.jsx - VERSION CORREGIDA para manejar errores del backend
+﻿// loans/components/ClientValidation.jsx - VERSION CORREGIDA para manejar errores del backend
 import React, { useState, useEffect } from 'react';
 import {
     User,
@@ -45,7 +45,6 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
         setConnectionStatus('checking');
 
         try {
-            console.log('Starting client validation for ID:', clientId);
 
             // Primer intento: usar el endpoint principal de restricciones
             let loanRestrictions = null;
@@ -56,31 +55,22 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
 
             // Intentar obtener restricciones de préstamos
             try {
-                console.log('Checking loan restrictions...');
                 loanRestrictions = await checkClientRestrictions(clientId);
-                console.log('Loan restrictions:', loanRestrictions);
                 setConnectionStatus('connected');
             } catch (loanErr) {
-                console.warn('Error checking loan restrictions:', loanErr.message);
                 setConnectionStatus('partial');
             }
 
             // Intentar obtener préstamos del cliente
             try {
-                console.log('Getting client loans...');
                 clientLoans = await getLoansByClient(clientId);
-                console.log('Client loans:', clientLoans.length);
             } catch (loansErr) {
-                console.warn('Error getting client loans:', loansErr.message);
             }
 
             // Intentar obtener restricciones de multas
             try {
-                console.log('Checking fine restrictions...');
                 fineRestrictions = await checkFineRestrictions(clientId);
-                console.log('Fine restrictions:', fineRestrictions);
             } catch (fineErr) {
-                console.warn('Error checking fine restrictions:', fineErr.message);
                 // Fallback: intentar obtener multas manualmente
                 try {
                     clientFines = await getFinesByClient(clientId);
@@ -95,7 +85,6 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
                         fallback: true
                     };
                 } catch (fallbackErr) {
-                    console.warn('Fallback fine check also failed:', fallbackErr.message);
                 }
             }
 
@@ -107,13 +96,11 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
                     }
                     setUnpaidFines(clientFines.filter(f => !f.paid));
                 } catch (err) {
-                    console.warn('Error loading unpaid fines:', err);
                 }
             }
 
             // Si no pudimos obtener restricciones de préstamos, hacer cálculo manual
             if (!loanRestrictions && clientLoans.length >= 0) {
-                console.log('Creating fallback loan restrictions...');
                 const activeLoans = clientLoans.filter(loan =>
                     loan.status === 'ACTIVE' || loan.status === 'active'
                 );
@@ -133,7 +120,6 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
 
             // Si no pudimos obtener restricciones de multas, asumir que no hay
             if (!fineRestrictions) {
-                console.log('Creating fallback fine restrictions...');
                 fineRestrictions = {
                     canRequestLoan: true,
                     hasUnpaidFines: false,
@@ -165,7 +151,6 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
                 }
             };
 
-            console.log('Final combined validation:', combinedValidation);
             setValidation(combinedValidation);
 
             if (onValidationChange) {
@@ -173,7 +158,6 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
             }
 
         } catch (err) {
-            console.error('Error in client validation:', err);
             setError(err.message || 'Error al validar el cliente');
             setConnectionStatus('error');
 
@@ -229,7 +213,6 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
             // Revalidar el cliente después de pagar la multa
             await validateClient();
         } catch (err) {
-            console.error('Error paying fine:', err);
             setError(err.message || 'Error al pagar la multa');
         } finally {
             setPayingFine(null);
@@ -334,7 +317,7 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
             case 'partial': return <Wifi className="h-4 w-4 text-yellow-400" />;
             case 'offline': return <WifiOff className="h-4 w-4 text-orange-400" />;
             case 'error': return <WifiOff className="h-4 w-4 text-red-400" />;
-            default: return <Loader className="h-4 w-4 text-gray-400 animate-spin" />;
+            default: return <Loader className="h-4 w-4 text-slate-400 animate-spin" />;
         }
     };
 
@@ -360,8 +343,8 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
 
     if (!clientId) {
         return (
-            <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                <div className="flex items-center text-gray-400">
+            <div className="bg-slate-700 rounded-lg p-4 border border-slate-600">
+                <div className="flex items-center text-slate-400">
                     <User className="h-5 w-5 mr-2" />
                     <span>Seleccione un cliente para validar su elegibilidad</span>
                 </div>
@@ -371,8 +354,8 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
 
     if (loading) {
         return (
-            <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                <div className="flex items-center text-gray-300">
+            <div className="bg-slate-700 rounded-lg p-4 border border-slate-600">
+                <div className="flex items-center text-slate-300">
                     <Loader className="h-5 w-5 mr-2 animate-spin" />
                     <span>Validando elegibilidad del cliente...</span>
                 </div>
@@ -401,10 +384,10 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
     return (
         <div className="space-y-4">
             {/* Header de validación con estado de conexión */}
-            <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
+            <div className="bg-slate-700 rounded-lg p-4 border border-slate-600">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                        <Shield className="h-5 w-5 mr-2 text-gray-400" />
+                        <Shield className="h-5 w-5 mr-2 text-slate-400" />
                         <h3 className="text-lg font-medium text-white">Validación de Cliente</h3>
                         <div className="ml-2 flex items-center">
                             {getConnectionIcon()}
@@ -433,8 +416,8 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
 
             {/* Resumen rápido */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-gray-700 rounded-lg p-3 border border-gray-600">
-                    <div className="text-gray-400 text-sm">Estado del Cliente</div>
+                <div className="bg-slate-700 rounded-lg p-3 border border-slate-600">
+                    <div className="text-slate-400 text-sm">Estado del Cliente</div>
                     <div className={`text-lg font-medium ${
                         validation.fineRestrictions?.isRestricted ? 'text-red-400' : 'text-green-400'
                     }`}>
@@ -442,15 +425,15 @@ const ClientValidation = ({ clientId, onValidationChange }) => {
                     </div>
                 </div>
 
-                <div className="bg-gray-700 rounded-lg p-3 border border-gray-600">
-                    <div className="text-gray-400 text-sm">Préstamos Activos</div>
+                <div className="bg-slate-700 rounded-lg p-3 border border-slate-600">
+                    <div className="text-slate-400 text-sm">Préstamos Activos</div>
                     <div className="text-lg font-medium text-white">
                         {validation.loanRestrictions?.currentActiveLoans || 0} / {validation.loanRestrictions?.maxAllowedLoans || 5}
                     </div>
                 </div>
 
-                <div className="bg-gray-700 rounded-lg p-3 border border-gray-600">
-                    <div className="text-gray-400 text-sm">Total Multas</div>
+                <div className="bg-slate-700 rounded-lg p-3 border border-slate-600">
+                    <div className="text-slate-400 text-sm">Total Multas</div>
                     <div className={`text-lg font-medium ${
                         (validation.fineRestrictions?.totalUnpaidAmount || 0) > 0 ? 'text-red-400' : 'text-green-400'
                     }`}>

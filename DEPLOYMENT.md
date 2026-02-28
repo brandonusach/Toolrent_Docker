@@ -182,7 +182,54 @@ docker compose ps
 
 ---
 
-## 6️⃣ Acceder a la Aplicación
+## 6️⃣ Modo Desarrollo (Hot Reload)
+
+> ✅ **Usa UNO u OTRO, nunca ambos al mismo tiempo.**  
+> - ¿Estás **modificando código**? → usa el comando de **desarrollo**  
+> - ¿Es la **entrega final**? → usa el comando de **producción**
+
+---
+
+### 🛠️ Mientras estás desarrollando (hot reload)
+
+El frontend se actualiza automáticamente en el navegador cada vez que guardas un archivo. **No hay que reconstruir Docker.**
+
+```powershell
+# Primera vez (instala dependencias y levanta)
+docker compose --profile dev up frontend-dev --build
+
+# Las siguientes veces (solo levanta, sin reconstruir)
+docker compose --profile dev up frontend-dev
+```
+
+Acceder en → **http://localhost:5173**
+
+> ⚠️ El backend y Keycloak deben estar corriendo por separado (pasos 2, 3 y 5).
+
+---
+
+### 🚀 Entrega final (producción)
+
+Construye y sirve todo optimizado con nginx.
+
+```powershell
+docker compose up --build -d
+```
+
+Acceder en → **http://localhost:8070**
+
+---
+
+| | Desarrollo | Producción |
+|---|---|---|
+| **Comando** | `docker compose --profile dev up frontend-dev` | `docker compose up --build -d` |
+| **URL** | http://localhost:5173 | http://localhost:8070 |
+| **Cambios de código** | ✅ Se reflejan al instante | ❌ Requiere `--build` |
+| **Cuándo usarlo** | Mientras programas | Entrega final |
+
+---
+
+## 7️⃣ Acceder a la Aplicación
 
 | Servicio | URL |
 |----------|-----|
@@ -192,7 +239,7 @@ docker compose ps
 
 ---
 
-## 7️⃣ Comandos Útiles
+## 8️⃣ Comandos Útiles
 
 ### Detener todos los servicios
 ```powershell

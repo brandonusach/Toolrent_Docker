@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+﻿import React, { useState, useEffect, useCallback } from 'react';
 import { Search, X, RotateCcw } from 'lucide-react';
 
 const ClientSearch = ({ onSearch, onClear }) => {
@@ -55,23 +55,23 @@ const ClientSearch = ({ onSearch, onClear }) => {
 
 
     return (
-        <div className="bg-gray-800 rounded-xl border border-gray-700">
+        <div className="bg-slate-800 rounded-xl border border-slate-700/50">
             <div className="p-6">
                 <div className="flex flex-col sm:flex-row gap-4">
                     {/* General Search */}
                     <div className="relative flex-1">
-                        <Search className="absolute left-3 top-3 text-gray-400" size={20} />
+                        <Search className="absolute left-3 top-3 text-slate-400" size={20} />
                         <input
                             type="text"
                             placeholder="Buscar por nombre o RUT..."
                             value={searchCriteria.general}
                             onChange={(e) => handleInputChange('general', e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                            className="w-full pl-10 pr-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
                         />
                         {searchCriteria.general && (
                             <button
                                 onClick={() => handleInputChange('general', '')}
-                                className="absolute right-3 top-3 text-gray-400 hover:text-white"
+                                className="absolute right-3 top-3 text-slate-400 hover:text-white"
                             >
                                 <X size={16} />
                             </button>
@@ -83,7 +83,7 @@ const ClientSearch = ({ onSearch, onClear }) => {
                         <select
                             value={searchCriteria.status}
                             onChange={(e) => handleInputChange('status', e.target.value)}
-                            className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                            className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-200"
                         >
                             <option value="ALL">Todos los estados</option>
                             <option value="ACTIVE">Solo Activos</option>

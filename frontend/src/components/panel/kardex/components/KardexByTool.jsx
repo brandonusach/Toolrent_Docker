@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Package, Search, CheckCircle, AlertCircle, TrendingUp, TrendingDown, ArrowUp, ArrowDown, RotateCcw, Minus, Plus, Wrench } from 'lucide-react';
 import { useKardex } from '../hooks/useKardex';
 import { formatDateTime } from '../../../../utils/dateUtils';
@@ -33,7 +33,6 @@ const KardexByTool = ({ tools, selectedTool, onSelectTool, onViewDetail }) => {
             const movements = await getMovementsByTool(selectedTool.id);
             setToolMovements(movements);
         } catch (error) {
-            console.error('Error loading tool movements:', error);
             setToolMovements([]);
         } finally {
             setLoading(false);
@@ -47,7 +46,6 @@ const KardexByTool = ({ tools, selectedTool, onSelectTool, onViewDetail }) => {
             const report = await generateAuditReport(selectedTool.id);
             setAuditReport(report);
         } catch (error) {
-            console.error('Error loading audit report:', error);
             setAuditReport(null);
         }
     };
@@ -59,7 +57,6 @@ const KardexByTool = ({ tools, selectedTool, onSelectTool, onViewDetail }) => {
             await verifyStockConsistency(selectedTool.id);
             await loadAuditReport(); // Reload to get updated consistency status
         } catch (error) {
-            console.error('Error checking consistency:', error);
         }
     };
 
@@ -69,7 +66,7 @@ const KardexByTool = ({ tools, selectedTool, onSelectTool, onViewDetail }) => {
             AVAILABLE: 'bg-green-500/10 text-green-400 border-green-500/30',
             LOANED: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
             IN_REPAIR: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30',
-            DECOMMISSIONED: 'bg-gray-500/10 text-gray-400 border-gray-500/30',
+            DECOMMISSIONED: 'bg-slate-500/10 text-slate-400 border-slate-500/30',
             PARTIALLY_AVAILABLE: 'bg-orange-500/10 text-orange-400 border-orange-500/30'
         };
         return badges[status] || 'bg-slate-500/10 text-slate-400 border-slate-500/30';
@@ -97,7 +94,7 @@ const KardexByTool = ({ tools, selectedTool, onSelectTool, onViewDetail }) => {
             case 'REPAIR':
                 return <Wrench className="w-5 h-5 text-yellow-400" />;
             case 'DECOMMISSION':
-                return <Minus className="w-5 h-5 text-gray-400" />;
+                return <Minus className="w-5 h-5 text-slate-400" />;
             case 'RESTOCK':
                 return <Plus className="w-5 h-5 text-purple-400" />;
             default:
@@ -133,7 +130,7 @@ const KardexByTool = ({ tools, selectedTool, onSelectTool, onViewDetail }) => {
                                 placeholder="Buscar herramienta..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full pl-10 pr-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
                             />
                         </div>
                     </div>
@@ -220,7 +217,7 @@ const KardexByTool = ({ tools, selectedTool, onSelectTool, onViewDetail }) => {
 
                             {loading ? (
                                 <div className="p-8 text-center">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
                                     <p className="text-slate-400">Cargando movimientos...</p>
                                 </div>
                             ) : toolMovements.length === 0 ? (

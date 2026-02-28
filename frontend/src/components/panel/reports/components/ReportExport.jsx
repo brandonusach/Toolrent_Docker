@@ -1,4 +1,4 @@
-// ReportExport.jsx - Exportar reportes (frontend puro)
+﻿// ReportExport.jsx - Exportar reportes (frontend puro)
 import React, { useState } from 'react';
 import { useReports } from '../hooks/useReports';
 import { getTodayDate } from '../../../../utils/dateUtils';
@@ -57,7 +57,6 @@ const ReportExport = ({ reportData, activeTab }) => {
 
             showSuccessMessage(`✅ Reporte "${exportData.displayName}" exportado exitosamente`);
         } catch (error) {
-            console.error('Error exporting data:', error);
             alert('Error al exportar los datos. Por favor, inténtalo de nuevo.');
         } finally {
             setIsExporting(false);
@@ -102,7 +101,7 @@ const ReportExport = ({ reportData, activeTab }) => {
                 value={exportFormat}
                 onChange={(e) => setExportFormat(e.target.value)}
                 disabled={isExporting || !hasData}
-                className="px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="px-3 py-2 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
                 {exportOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -117,7 +116,7 @@ const ReportExport = ({ reportData, activeTab }) => {
                 className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                     hasData && !isExporting
                         ? 'bg-green-600 text-white hover:bg-green-700'
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        : 'bg-slate-300 text-slate-500 cursor-not-allowed'
                 }`}
                 title={
                     !hasData
@@ -136,13 +135,13 @@ const ReportExport = ({ reportData, activeTab }) => {
             </button>
 
             {hasData && (
-                <div className="hidden lg:flex items-center text-xs text-gray-500">
+                <div className="hidden lg:flex items-center text-xs text-slate-500">
                     <span>{exportData.data.length} registros</span>
                 </div>
             )}
 
             {!hasData && (
-                <div className="hidden lg:flex items-center text-xs text-gray-400">
+                <div className="hidden lg:flex items-center text-xs text-slate-400">
                     <span>📊 Carga datos para exportar</span>
                 </div>
             )}
@@ -151,3 +150,4 @@ const ReportExport = ({ reportData, activeTab }) => {
 };
 
 export default ReportExport;
+

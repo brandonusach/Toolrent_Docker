@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { X, Calendar, DollarSign, Calculator, Settings, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { RATE_TYPES, RATE_TYPE_CONFIG, formatCurrency, formatDate } from '../utils/rateConstants';
 
@@ -29,7 +29,6 @@ const RateHistory = ({
             const history = await onGetHistory(selectedType);
             setHistoryData(history || []);
         } catch (error) {
-            console.error('Error loading rate history:', error);
             setHistoryData([]);
         } finally {
             setLoading(false);
@@ -127,9 +126,9 @@ const RateHistory = ({
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 rounded-xl border border-gray-700 w-full max-w-6xl max-h-[90vh] overflow-hidden">
+            <div className="bg-slate-800 rounded-xl border border-slate-700/50 w-full max-w-6xl max-h-[90vh] overflow-hidden">
                 {/* Header */}
-                <div className="p-6 border-b border-gray-700">
+                <div className="p-6 border-b border-slate-700/50">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             {typeConfig && (
@@ -141,14 +140,14 @@ const RateHistory = ({
                                 <h2 className="text-xl font-semibold text-white">
                                     Historial de {typeConfig ? typeConfig.label : 'Tarifas'}
                                 </h2>
-                                <p className="text-gray-400 text-sm">
+                                <p className="text-slate-400 text-sm">
                                     Registro histórico de cambios y configuraciones
                                 </p>
                             </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+                            className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-colors"
                         >
                             <X size={20} />
                         </button>
@@ -156,16 +155,16 @@ const RateHistory = ({
                 </div>
 
                 {/* Controles */}
-                <div className="p-4 border-b border-gray-700 bg-gray-750">
+                <div className="p-4 border-b border-slate-700/50 bg-slate-750">
                     <div className="flex flex-wrap items-center gap-4">
                         {/* Selector de tipo */}
                         {!rateType && (
                             <div className="flex items-center gap-2">
-                                <label className="text-sm font-medium text-gray-300">Tipo:</label>
+                                <label className="text-sm font-medium text-slate-300">Tipo:</label>
                                 <select
                                     value={selectedType || ''}
                                     onChange={(e) => setSelectedType(e.target.value)}
-                                    className="bg-gray-700 border border-gray-600 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:border-blue-500"
+                                    className="bg-slate-700 border border-slate-600 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:border-blue-500"
                                 >
                                     <option value="">Seleccionar tipo</option>
                                     {Object.entries(RATE_TYPES).map(([key, value]) => (
@@ -179,11 +178,11 @@ const RateHistory = ({
 
                         {/* Filtro por estado */}
                         <div className="flex items-center gap-2">
-                            <label className="text-sm font-medium text-gray-300">Estado:</label>
+                            <label className="text-sm font-medium text-slate-300">Estado:</label>
                             <select
                                 value={filterActive}
                                 onChange={(e) => setFilterActive(e.target.value)}
-                                className="bg-gray-700 border border-gray-600 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:border-blue-500"
+                                className="bg-slate-700 border border-slate-600 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:border-blue-500"
                             >
                                 <option value="all">Todas</option>
                                 <option value="active">Solo Activas</option>
@@ -193,11 +192,11 @@ const RateHistory = ({
 
                         {/* Ordenar por */}
                         <div className="flex items-center gap-2">
-                            <label className="text-sm font-medium text-gray-300">Ordenar:</label>
+                            <label className="text-sm font-medium text-slate-300">Ordenar:</label>
                             <select
                                 value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value)}
-                                className="bg-gray-700 border border-gray-600 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:border-blue-500"
+                                className="bg-slate-700 border border-slate-600 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:border-blue-500"
                             >
                                 <option value="createdAt">Fecha Creación</option>
                                 <option value="effectiveFrom">Fecha Inicio</option>
@@ -205,7 +204,7 @@ const RateHistory = ({
                             </select>
                             <button
                                 onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                                className="px-2 py-1.5 text-gray-400 hover:text-white border border-gray-600 hover:border-gray-500 rounded text-sm transition-colors"
+                                className="px-2 py-1.5 text-slate-400 hover:text-white border border-slate-600 hover:border-slate-500 rounded text-sm transition-colors"
                             >
                                 {sortOrder === 'asc' ? '↑' : '↓'}
                             </button>
@@ -215,7 +214,7 @@ const RateHistory = ({
                         <button
                             onClick={loadHistory}
                             disabled={loading || !selectedType}
-                            className="ml-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white rounded text-sm transition-colors"
+                            className="ml-auto px-4 py-2 bg-orange-600 hover:bg-orange-700 disabled:bg-slate-600 text-white rounded text-sm transition-colors"
                         >
                             {loading ? 'Cargando...' : 'Actualizar'}
                         </button>
@@ -226,16 +225,16 @@ const RateHistory = ({
                 <div className="p-6 overflow-y-auto max-h-96">
                     {loading ? (
                         <div className="flex items-center justify-center py-12">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                            <span className="ml-3 text-gray-400">Cargando historial...</span>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+                            <span className="ml-3 text-slate-400">Cargando historial...</span>
                         </div>
                     ) : !selectedType ? (
-                        <div className="text-center py-8 text-gray-400">
+                        <div className="text-center py-8 text-slate-400">
                             <Calendar className="mx-auto h-12 w-12 mb-2" />
                             <p>Selecciona un tipo de tarifa para ver su historial</p>
                         </div>
                     ) : filteredData.length === 0 ? (
-                        <div className="text-center py-8 text-gray-400">
+                        <div className="text-center py-8 text-slate-400">
                             <Calendar className="mx-auto h-12 w-12 mb-2" />
                             <p>No hay registros en el historial</p>
                         </div>
@@ -251,7 +250,7 @@ const RateHistory = ({
                                         className={`p-4 rounded-lg border ${
                                             isCurrentlyActive(rate)
                                                 ? `bg-${typeConfig.color}-500/5 border-${typeConfig.color}-500/30`
-                                                : 'bg-gray-750 border-gray-600'
+                                                : 'bg-slate-750 border-slate-600'
                                         }`}
                                     >
                                         <div className="flex items-start justify-between">
@@ -276,16 +275,16 @@ const RateHistory = ({
 
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                                     <div>
-                                                        <p className="text-gray-400 mb-1">Período de Vigencia:</p>
-                                                        <p className="text-gray-300">
+                                                        <p className="text-slate-400 mb-1">Período de Vigencia:</p>
+                                                        <p className="text-slate-300">
                                                             <Calendar size={14} className="inline mr-1" />
                                                             {formatValidityPeriod(rate)}
                                                         </p>
                                                     </div>
 
                                                     <div>
-                                                        <p className="text-gray-400 mb-1">Fecha de Creación:</p>
-                                                        <p className="text-gray-300">
+                                                        <p className="text-slate-400 mb-1">Fecha de Creación:</p>
+                                                        <p className="text-slate-300">
                                                             <Clock size={14} className="inline mr-1" />
                                                             {formatDate(rate.createdAt)}
                                                         </p>
@@ -294,7 +293,7 @@ const RateHistory = ({
                                             </div>
 
                                             <div className="text-right">
-                                                <p className="text-xs text-gray-500">ID: {rate.id}</p>
+                                                <p className="text-xs text-slate-500">ID: {rate.id}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -306,8 +305,8 @@ const RateHistory = ({
 
                 {/* Footer con estadísticas */}
                 {filteredData.length > 0 && (
-                    <div className="p-4 border-t border-gray-700 bg-gray-750">
-                        <div className="flex justify-between items-center text-sm text-gray-400">
+                    <div className="p-4 border-t border-slate-700/50 bg-slate-750">
+                        <div className="flex justify-between items-center text-sm text-slate-400">
                             <span>
                                 Mostrando {filteredData.length} de {historyData.length} registros
                             </span>
@@ -328,3 +327,4 @@ const RateHistory = ({
 };
 
 export default RateHistory;
+

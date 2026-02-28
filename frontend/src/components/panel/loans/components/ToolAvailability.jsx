@@ -1,4 +1,4 @@
-// loans/components/ToolAvailability.jsx - Verificar disponibilidad de herramienta
+﻿// loans/components/ToolAvailability.jsx - Verificar disponibilidad de herramienta
 import React, { useState, useEffect } from 'react';
 import {
     Package2,
@@ -62,7 +62,6 @@ const ToolAvailability = ({ toolId, quantity = 1, clientId, onAvailabilityChange
             }
 
         } catch (err) {
-            console.error('Error validating tool availability:', err);
             setError(err.response?.data || err.message || 'Error al validar la disponibilidad');
         } finally {
             setLoading(false);
@@ -72,7 +71,7 @@ const ToolAvailability = ({ toolId, quantity = 1, clientId, onAvailabilityChange
     const getStatusIcon = () => {
         if (loading) return <Loader className="h-5 w-5 animate-spin text-blue-400" />;
         if (error) return <XCircle className="h-5 w-5 text-red-400" />;
-        if (!availability) return <Info className="h-5 w-5 text-gray-400" />;
+        if (!availability) return <Info className="h-5 w-5 text-slate-400" />;
 
         if (availability.available && (!clientToolCheck || !clientToolCheck.hasActiveLoanForTool)) {
             return <CheckCircle className="h-5 w-5 text-green-400" />;
@@ -106,7 +105,7 @@ const ToolAvailability = ({ toolId, quantity = 1, clientId, onAvailabilityChange
     const getStatusColor = () => {
         if (loading) return 'border-blue-500 bg-blue-900/30';
         if (error) return 'border-red-500 bg-red-900/30';
-        if (!availability) return 'border-gray-500 bg-gray-700';
+        if (!availability) return 'border-slate-500 bg-slate-700';
 
         if (availability.available && (!clientToolCheck || !clientToolCheck.hasActiveLoanForTool)) {
             return 'border-green-500 bg-green-900';
@@ -117,8 +116,8 @@ const ToolAvailability = ({ toolId, quantity = 1, clientId, onAvailabilityChange
 
     if (!toolId) {
         return (
-            <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                <div className="flex items-center text-gray-400">
+            <div className="bg-slate-700 rounded-lg p-4 border border-slate-600">
+                <div className="flex items-center text-slate-400">
                     <Package2 className="h-5 w-5 mr-2" />
                     <span>Seleccione una herramienta para verificar disponibilidad</span>
                 </div>
@@ -137,7 +136,7 @@ const ToolAvailability = ({ toolId, quantity = 1, clientId, onAvailabilityChange
                             <h3 className="text-lg font-medium text-white">
                                 Estado de Disponibilidad
                             </h3>
-                            <p className="text-gray-300">{getStatusText()}</p>
+                            <p className="text-slate-300">{getStatusText()}</p>
                         </div>
                     </div>
 
@@ -146,7 +145,7 @@ const ToolAvailability = ({ toolId, quantity = 1, clientId, onAvailabilityChange
                             <div className="text-2xl font-bold text-white">
                                 {availability.currentStock}
                             </div>
-                            <div className="text-sm text-gray-400">unidades</div>
+                            <div className="text-sm text-slate-400">unidades</div>
                         </div>
                     )}
                 </div>
@@ -164,7 +163,7 @@ const ToolAvailability = ({ toolId, quantity = 1, clientId, onAvailabilityChange
 
             {/* Detalles de disponibilidad */}
             {availability && (
-                <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
+                <div className="bg-slate-700 rounded-lg p-4 border border-slate-600">
                     <h4 className="text-white font-medium mb-3 flex items-center">
                         <Wrench className="h-4 w-4 mr-2" />
                         Información de la Herramienta
@@ -172,12 +171,12 @@ const ToolAvailability = ({ toolId, quantity = 1, clientId, onAvailabilityChange
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         <div>
-                            <span className="text-gray-400">Nombre:</span>
+                            <span className="text-slate-400">Nombre:</span>
                             <p className="text-white font-medium">{availability.toolName || 'N/A'}</p>
                         </div>
 
                         <div>
-                            <span className="text-gray-400">Estado:</span>
+                            <span className="text-slate-400">Estado:</span>
                             <p className={`font-medium ${
                                 availability.toolStatus === 'AVAILABLE'
                                     ? 'text-green-400'
@@ -188,20 +187,20 @@ const ToolAvailability = ({ toolId, quantity = 1, clientId, onAvailabilityChange
                         </div>
 
                         <div>
-                            <span className="text-gray-400">Stock actual:</span>
+                            <span className="text-slate-400">Stock actual:</span>
                             <p className="text-white font-medium">{availability.currentStock || 0}</p>
                         </div>
 
                         {availability.maxAvailableQuantity && (
                             <div>
-                                <span className="text-gray-400">Máximo disponible:</span>
+                                <span className="text-slate-400">Máximo disponible:</span>
                                 <p className="text-white font-medium">{availability.maxAvailableQuantity}</p>
                             </div>
                         )}
 
                         {availability.issue && (
                             <div className="md:col-span-2">
-                                <span className="text-gray-400">Problema:</span>
+                                <span className="text-slate-400">Problema:</span>
                                 <p className="text-red-400 text-sm">{availability.issue}</p>
                             </div>
                         )}
@@ -211,7 +210,7 @@ const ToolAvailability = ({ toolId, quantity = 1, clientId, onAvailabilityChange
 
             {/* Verificación del cliente */}
             {clientToolCheck && (
-                <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
+                <div className="bg-slate-700 rounded-lg p-4 border border-slate-600">
                     <h4 className="text-white font-medium mb-3 flex items-center">
                         <User className="h-4 w-4 mr-2" />
                         Verificación del Cliente
@@ -219,7 +218,7 @@ const ToolAvailability = ({ toolId, quantity = 1, clientId, onAvailabilityChange
 
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                            <span className="text-gray-400">¿Tiene préstamo activo de esta herramienta?</span>
+                            <span className="text-slate-400">¿Tiene préstamo activo de esta herramienta?</span>
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                                 clientToolCheck.hasActiveLoanForTool
                                     ? 'bg-red-900 text-red-200'
@@ -230,7 +229,7 @@ const ToolAvailability = ({ toolId, quantity = 1, clientId, onAvailabilityChange
                         </div>
 
                         <div className="flex items-center justify-between">
-                            <span className="text-gray-400">¿Puede solicitar esta herramienta?</span>
+                            <span className="text-slate-400">¿Puede solicitar esta herramienta?</span>
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                                 clientToolCheck.canLoanThisTool
                                     ? 'bg-green-900 text-green-200'
@@ -270,7 +269,7 @@ const ToolAvailability = ({ toolId, quantity = 1, clientId, onAvailabilityChange
                             </div>
                         )}
 
-                        <div className="text-xs text-gray-400 mt-2">
+                        <div className="text-xs text-slate-400 mt-2">
                             {clientToolCheck.message}
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { X, AlertTriangle, UserCheck, UserX, Info } from 'lucide-react';
 
 const ClientStatus = ({
@@ -78,15 +78,15 @@ const ClientStatus = ({
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 py-8 px-4">
-            <div className="bg-gray-800 rounded-xl max-w-md w-full border border-gray-700 max-h-[85vh] overflow-y-auto my-auto">
+            <div className="bg-slate-800 rounded-xl max-w-md w-full border border-slate-700/50 max-h-[85vh] overflow-y-auto my-auto">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-700">
+                <div className="flex items-center justify-between p-6 border-b border-slate-700/50">
                     <h2 className="text-xl font-bold text-white">
                         Cambiar Estado del Cliente
                     </h2>
                     <button
                         onClick={handleClose}
-                        className="text-gray-400 hover:text-white p-1 rounded"
+                        className="text-slate-400 hover:text-white p-1 rounded"
                         disabled={isLoading}
                     >
                         <X size={20} />
@@ -96,7 +96,7 @@ const ClientStatus = ({
                 {/* Content */}
                 <div className="p-6 space-y-6">
                     {/* Client Info */}
-                    <div className="bg-gray-750 p-4 rounded-lg border border-gray-600">
+                    <div className="bg-slate-750 p-4 rounded-lg border border-slate-600">
                         <div className="flex items-center space-x-3">
                             <div className="h-10 w-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
                                 <span className="text-white text-sm font-semibold">
@@ -105,14 +105,14 @@ const ClientStatus = ({
                             </div>
                             <div>
                                 <p className="text-white font-medium">{client.name}</p>
-                                <p className="text-gray-400 text-sm">RUT: {client.rut}</p>
+                                <p className="text-slate-400 text-sm">RUT: {client.rut}</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Current Status */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-3">
+                        <label className="block text-sm font-medium text-slate-300 mb-3">
                             Estado Actual
                         </label>
                         <div className={`p-3 rounded-lg border ${currentStatusConfig.bgColor} ${currentStatusConfig.borderColor}`}>
@@ -122,7 +122,7 @@ const ClientStatus = ({
                                     {currentStatusConfig.label}
                                 </span>
                             </div>
-                            <p className="text-gray-300 text-sm mt-1">
+                            <p className="text-slate-300 text-sm mt-1">
                                 {currentStatusConfig.description}
                             </p>
                         </div>
@@ -130,7 +130,7 @@ const ClientStatus = ({
 
                     {/* New Status Selection */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-3">
+                        <label className="block text-sm font-medium text-slate-300 mb-3">
                             Nuevo Estado
                         </label>
                         <div className="space-y-2">
@@ -140,7 +140,7 @@ const ClientStatus = ({
                                     className={`flex items-start p-3 border rounded-lg cursor-pointer transition-all ${
                                         selectedStatus === option.value
                                             ? `${option.bgColor} ${option.borderColor}`
-                                            : 'border-gray-600 hover:border-gray-500'
+                                            : 'border-slate-600 hover:border-slate-500'
                                     }`}
                                 >
                                     <input
@@ -154,7 +154,7 @@ const ClientStatus = ({
                                     />
                                     <div className="flex items-start space-x-3 w-full">
                                         <option.icon
-                                            className={selectedStatus === option.value ? option.color : 'text-gray-400'}
+                                            className={selectedStatus === option.value ? option.color : 'text-slate-400'}
                                             size={20}
                                         />
                                         <div>
@@ -163,7 +163,7 @@ const ClientStatus = ({
                                             }`}>
                                                 {option.label}
                                             </p>
-                                            <p className="text-gray-400 text-sm">
+                                            <p className="text-slate-400 text-sm">
                                                 {option.description}
                                             </p>
                                         </div>
@@ -182,7 +182,7 @@ const ClientStatus = ({
                                     <p className={`font-medium ${changeInfo.color} mb-1`}>
                                         {changeInfo.title}
                                     </p>
-                                    <p className="text-gray-300 text-sm">
+                                    <p className="text-slate-300 text-sm">
                                         {changeInfo.message}
                                     </p>
                                 </div>
@@ -193,14 +193,14 @@ const ClientStatus = ({
                     {/* Reason (optional for restrictions) */}
                     {selectedStatus === 'RESTRICTED' && (
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-slate-300 mb-2">
                                 Motivo de Restricción (Opcional)
                             </label>
                             <textarea
                                 value={reason}
                                 onChange={(e) => setReason(e.target.value)}
                                 placeholder="Ej: Cliente con 3 préstamos vencidos..."
-                                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
                                 rows="3"
                                 disabled={isLoading}
                             />
@@ -219,11 +219,11 @@ const ClientStatus = ({
                 </div>
 
                 {/* Footer */}
-                <div className="flex space-x-3 p-6 border-t border-gray-700">
+                <div className="flex space-x-3 p-6 border-t border-slate-700/50">
                     <button
                         type="button"
                         onClick={handleClose}
-                        className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors"
+                        className="flex-1 px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-500 transition-colors"
                         disabled={isLoading}
                     >
                         Cancelar

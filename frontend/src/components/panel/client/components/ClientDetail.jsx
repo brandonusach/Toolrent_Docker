@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { X, User, Phone, Calendar, Shield } from 'lucide-react';
 import { useLoans } from '../../loans/hooks/useLoans';
 
@@ -69,7 +69,6 @@ const ClientDetail = ({ client, isOpen, onClose }) => {
                     : 0
             });
         } catch (error) {
-            console.error('Error loading client statistics:', error);
             setStats({
                 activeLoans: 0,
                 completedLoans: 0,
@@ -123,9 +122,9 @@ const ClientDetail = ({ client, isOpen, onClose }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 py-8 px-4">
-            <div className="bg-gray-800 rounded-xl max-w-3xl w-full border border-gray-700 max-h-[85vh] overflow-y-auto my-auto">
+            <div className="bg-slate-800 rounded-xl max-w-3xl w-full border border-slate-700/50 max-h-[85vh] overflow-y-auto my-auto">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-700">
+                <div className="flex items-center justify-between p-6 border-b border-slate-700/50">
                     <div className="flex items-center space-x-4">
                         <div className="h-12 w-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
                             <span className="text-white text-lg font-semibold">
@@ -136,14 +135,14 @@ const ClientDetail = ({ client, isOpen, onClose }) => {
                             <h2 className="text-xl font-bold text-white">
                                 {client.name}
                             </h2>
-                            <p className="text-gray-400 text-sm">
+                            <p className="text-slate-400 text-sm">
                                 ID: {client.id}
                             </p>
                         </div>
                     </div>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-700 transition-colors"
+                        className="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-700 transition-colors"
                     >
                         <X size={20} />
                     </button>
@@ -159,26 +158,26 @@ const ClientDetail = ({ client, isOpen, onClose }) => {
                                 {statusInfo.label}
                             </h3>
                         </div>
-                        <p className="text-gray-300 text-sm">
+                        <p className="text-slate-300 text-sm">
                             {statusInfo.description}
                         </p>
                     </div>
 
                     {/* Personal Information */}
-                    <div className="bg-gray-750 p-4 rounded-lg border border-gray-600">
+                    <div className="bg-slate-750 p-4 rounded-lg border border-slate-600">
                         <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
                             <User className="mr-2" size={20} />
                             Información Personal
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-400 mb-1">
+                                <label className="block text-sm font-medium text-slate-400 mb-1">
                                     Nombre Completo
                                 </label>
                                 <p className="text-white">{client.name}</p>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-400 mb-1">
+                                <label className="block text-sm font-medium text-slate-400 mb-1">
                                     RUT
                                 </label>
                                 <p className="text-white font-mono">{formatRUT(client.rut)}</p>
@@ -187,20 +186,20 @@ const ClientDetail = ({ client, isOpen, onClose }) => {
                     </div>
 
                     {/* Contact Information */}
-                    <div className="bg-gray-750 p-4 rounded-lg border border-gray-600">
+                    <div className="bg-slate-750 p-4 rounded-lg border border-slate-600">
                         <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
                             <Phone className="mr-2" size={20} />
                             Información de Contacto
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-400 mb-1">
+                                <label className="block text-sm font-medium text-slate-400 mb-1">
                                     Teléfono
                                 </label>
                                 <p className="text-white">{formatPhone(client.phone)}</p>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-400 mb-1">
+                                <label className="block text-sm font-medium text-slate-400 mb-1">
                                     Email
                                 </label>
                                 <p className="text-white break-all">{client.email}</p>
@@ -209,7 +208,7 @@ const ClientDetail = ({ client, isOpen, onClose }) => {
                     </div>
 
                     {/* Account Activity - CON DATOS REALES */}
-                    <div className="bg-gray-750 p-4 rounded-lg border border-gray-600">
+                    <div className="bg-slate-750 p-4 rounded-lg border border-slate-600">
                         <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
                             <Calendar className="mr-2" size={20} />
                             Actividad de la Cuenta
@@ -217,23 +216,23 @@ const ClientDetail = ({ client, isOpen, onClose }) => {
                         {loadingStats ? (
                             <div className="text-center py-8">
                                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
-                                <p className="text-gray-400 mt-2">Cargando estadísticas...</p>
+                                <p className="text-slate-400 mt-2">Cargando estadísticas...</p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div className="text-center p-3 bg-gray-800 rounded-lg">
+                                <div className="text-center p-3 bg-slate-800 rounded-lg">
                                     <p className="text-2xl font-bold text-blue-400">{stats.activeLoans}</p>
-                                    <p className="text-sm text-gray-400">Préstamos Activos</p>
+                                    <p className="text-sm text-slate-400">Préstamos Activos</p>
                                 </div>
-                                <div className="text-center p-3 bg-gray-800 rounded-lg">
+                                <div className="text-center p-3 bg-slate-800 rounded-lg">
                                     <p className="text-2xl font-bold text-green-400">{stats.completedLoans}</p>
-                                    <p className="text-sm text-gray-400">Préstamos Completados</p>
+                                    <p className="text-sm text-slate-400">Préstamos Completados</p>
                                 </div>
-                                <div className="text-center p-3 bg-gray-800 rounded-lg">
+                                <div className="text-center p-3 bg-slate-800 rounded-lg">
                                     <p className={`text-2xl font-bold ${stats.totalDaysOverdue > 0 ? 'text-red-400' : 'text-yellow-400'}`}>
                                         {stats.totalDaysOverdue}
                                     </p>
-                                    <p className="text-sm text-gray-400">Días de Retraso Promedio</p>
+                                    <p className="text-sm text-slate-400">Días de Retraso Promedio</p>
                                 </div>
                             </div>
                         )}
@@ -250,10 +249,10 @@ const ClientDetail = ({ client, isOpen, onClose }) => {
                 </div>
 
                 {/* Footer */}
-                <div className="px-6 py-4 border-t border-gray-700 bg-gray-750 rounded-b-xl">
+                <div className="px-6 py-4 border-t border-slate-700/50 bg-slate-750 rounded-b-xl">
                     <button
                         onClick={onClose}
-                        className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors"
+                        className="w-full px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-500 transition-colors"
                     >
                         Cerrar
                     </button>

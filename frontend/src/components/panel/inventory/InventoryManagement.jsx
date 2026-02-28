@@ -96,34 +96,40 @@ const InventoryManagement = () => {
     };
 
     return (
-        <div className="p-6 bg-gray-900 min-h-screen">
+        <div>
             {/* Header */}
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-white mb-2">
-                    Administra el catálogo de herramientas
+                    Gestión de Inventario
                 </h1>
-                <p className="text-gray-400 mb-4">
-                    Gestiona herramientas y su estado individual
-                </p>
-
-                {/* Quick Stats Display */}
+                <p className="text-slate-400 mb-6">
+                    Administra el catálogo de herramientas y su estado individual
+                </p>                {/* Quick Stats Display */}
                 {displayStats.totalTools > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-gray-800 rounded-lg p-4 border border-gray-700">
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-white">{displayStats.totalTools}</div>
-                            <div className="text-sm text-gray-400">Total Herramientas</div>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 p-6 rounded-lg shadow-lg">
+                            <div className="space-y-1">
+                                <p className="text-sm font-medium text-slate-400">Total Herramientas</p>
+                                <p className="text-3xl font-bold text-white">{displayStats.totalTools}</p>
+                            </div>
                         </div>
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-green-400">{displayStats.totalStock}</div>
-                            <div className="text-sm text-gray-400">Stock Total</div>
+                        <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 p-6 rounded-lg shadow-lg">
+                            <div className="space-y-1">
+                                <p className="text-sm font-medium text-slate-400">Stock Total</p>
+                                <p className="text-3xl font-bold text-emerald-400">{displayStats.totalStock}</p>
+                            </div>
                         </div>
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-orange-400">{displayStats.lowStockTools}</div>
-                            <div className="text-sm text-gray-400">Stock Bajo</div>
+                        <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 p-6 rounded-lg shadow-lg">
+                            <div className="space-y-1">
+                                <p className="text-sm font-medium text-slate-400">Stock Bajo</p>
+                                <p className="text-3xl font-bold text-orange-400">{displayStats.lowStockTools}</p>
+                            </div>
                         </div>
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-red-400">{displayStats.noStockTools}</div>
-                            <div className="text-sm text-gray-400">Sin Stock</div>
+                        <div className="bg-slate-800/60 backdrop-blur-sm border border-slate-700/50 p-6 rounded-lg shadow-lg">
+                            <div className="space-y-1">
+                                <p className="text-sm font-medium text-slate-400">Sin Stock</p>
+                                <p className="text-3xl font-bold text-red-400">{displayStats.noStockTools}</p>
+                            </div>
                         </div>
                     </div>
                 )}
