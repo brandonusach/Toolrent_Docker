@@ -1,0 +1,10 @@
+Gherkin language
+- https://cucumber.io/docs/gherkin/reference
+
+Selenium:
+- https://www.selenium.dev/
+
+WebApps disponibles para realizar pruebas funcionales:
+- https://www.saucedemo.com/
+- https://testsheepnz.github.io/BasicCalculator.html
+- https://jpetstore.aspectran.com/catalog/

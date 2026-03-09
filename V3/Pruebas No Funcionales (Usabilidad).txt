@@ -1,0 +1,38 @@
+Bounce Rate, Pages per Visit, Avg Visit Duration
+- https://www.similarweb.com/
+
+Usability
+- https://www.nngroup.com/articles/usability-101-introduction-to-usability/
+
+Usability tests: no more than 5 users
+- https://www.nngroup.com/articles/why-you-only-need-to-test-with-5-users/
+
+What are wireframes and why are they used?
+- https://balsamiq.com/learn/articles/what-are-wireframes/
+
+Introduction to User Interface Design
+- https://balsamiq.com/learn/courses/intro-to-ui-design/
+
+Introduction to User Experience Design
+- https://balsamiq.com/learn/courses/intro-to-ux-design/
+
+UI Control Guidelines
+- https://balsamiq.com/learn/ui-control-guidelines/
+
+10 Usability Heuristics for User Interface Design (by Jakob Nielsen)
+- https://www.nngroup.com/articles/ten-usability-heuristics/
+
+The System Usability Scale (SUS)
+- https://medium.com/thinking-design/the-system-usability-scale-how-its-used-in-ux-b823045270b7
+
+SUS: A quick and dirty usability scale (Paper)
+- https://www.researchgate.net/publication/228593520_SUS_A_quick_and_dirty_usability_scale
+
+Microsoft Clarity. (A free product that captures how people use your site).
+- https://clarity.microsoft.com/
+
++++++++++++++++
+Comparación para revisar las Heuristicas de Nielsen.
+- https://www.latamairlines.com/
+- https://www.skyairline.com/
+- https://jetsmart.com/

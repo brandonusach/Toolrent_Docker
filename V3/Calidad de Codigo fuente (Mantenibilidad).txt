@@ -1,0 +1,62 @@
+Code Smells
+- https://refactoring.guru/es/refactoring/smells
+
+Refactoring Techniques
+- https://refactoring.guru/es/refactoring/techniques
+
+Refactoring (Martin Fowler)
+- https://refactoring.com/
+
+Books
+- Clean Code: A Handbook of Agile Software Craftsmanship (Robert C. Martin)
+- Code Complete (Steve McConnell)
+
+Google Style Guides
+- https://google.github.io/styleguide/
+
+What is technical debt?
+- https://www.sonarsource.com/learn/technical-debt/
+
+Technical Debt Ratio: A Definition and Why It Matters
+- https://linearb.io/blog/technical-debt-ratio
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Sonarqube: A platform for automated static code analysis
+- https://www.sonarsource.com/products/sonarqube/
+
+- SonarQube Communit Edition
+  https://www.sonarsource.com/products/sonarqube/downloads/
+  ** La ultima version require Java 21.
+
+- Para buscar versions anteriores buscar en:
+  https://www.sonarsource.com/products/sonarqube/downloads/historical-downloads/
+- Las versiones 10.x funcionan con Java 17. En versions superiors require Java 21.
+
+- Para correr Sonarqube, ir a la carpeta sonarqube-10.7.0.96327\bin\windows-x86-64
+  y correr el archivo StartSonar.bat
+
+- Acceder a SonarQube desde http://localhost:9000
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Creacion de Proyecto en SonarQube (para Backend):
+- Crear Proyecto local
+- Se selecciona Maven y al recibir el siguiente codigo:
+
+mvn clean verify sonar:sonar
+  -Dsonar.projectKey=SisGR-Backend
+  -Dsonar.projectName='SisGR Backend'
+  -Dsonar.host.url=http://localhost:9000
+  -Dsonar.token=sqp_e68b70217418136611ef9fdb0817953a2dd63dea
+
+- Debe ser reemplazado por
+
+mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+  -Dsonar.projectKey=SisGR-Backend
+  -Dsonar.projectName='SisGR Backend'
+  -Dsonar.host.url=http://localhost:9000
+  -Dsonar.token=sqp_e68b70217418136611ef9fdb0817953a2dd63dea
+
+- Abrir el Proyecto en IntelliJ y correr la instruccion anterior en la opcion "Execute Maven Goal" (del menu de Maven).
+
+- Revisar SonarQube para ver el analisis del Proyecto.

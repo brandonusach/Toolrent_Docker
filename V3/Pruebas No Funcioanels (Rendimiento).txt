@@ -1,0 +1,43 @@
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+k6 (Load testing tool)
+- https://k6.io/
+
+Instalar k6
+- https://grafana.com/docs/k6/latest/set-up/install-k6/
+
+** Tambien se puede instalar usando el ZIP.
+  - Download the latest binary from the GitHub Releases page
+    https://github.com/grafana/k6/releases
+  - La ultima version al Enero 2026 es la v1.5.0
+    Se descarga desde https://github.com/grafana/k6/releases/tag/v1.5.0
+    -- para Windows descargar k6-v1.5.0-windows-amd64.zip
+  - Para instalar k6 simplemente desempaquetar el .ZIP en alguna carpeta (por ejemplo C:\Tools\k6)
+  - Actualizar el PATH de Windows (Variables de Sistema) con la ruta donde quedo K6 (C:\Tools\k6)
+
+
+Revisar version instalada
+- escribir en la consola:
+  k6 version
+
+- Los scripts se escriben en archivos .js
+  - Por ejemplo el script: employees-list-constant-10.js
+
+- Para correr un script:
+  - k6 run employees-list-constant-10.js
+
+- Para ver el dashboard integrado que trae k6
+  $env:K6_WEB_DASHBOARD="true"
+  k6 run employees-list-constant-10.js  
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Google Lighthouse (a tool that analyzes the performance of web apps)
+- You can run Lighthouse in Chrome DevTools (Ctrl+Shift+I)
+
+Google Lighthouse Documentation
+- https://developer.chrome.com/docs/lighthouse/overview
+
+How to use:
+- Mostrar la página web a analizar
+- Desde el navegador Chrome, ir a "More Tools/Developers Tools" (Ctrl+Shift+I)
+- Allí buscar Lighthouse y ejecutar la opción "Analyze Page Load".
